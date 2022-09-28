@@ -6,6 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Service;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.kafka.KafkaTopicCFG;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.IKafkaSRV;
@@ -25,10 +26,16 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 	@Autowired
 	private ILogEventsRepo eventsRepo;
 
+	@Autowired
+	private KafkaTopicCFG kafkaTopicCFG;
+	
 	@Override
 	@KafkaListener(topics = "#{'${kafka.log.base-topic}'}", clientIdPrefix = "#{'${kafka.consumer.client-id}'}", containerFactory = "kafkaListenerIngestorContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
 	public void listener(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders) {
 		try {
+			String val = cr.value();
+			log.info("Listener in ascolto sulla coda : " + kafkaTopicCFG.getLogTopic());
+			log.info("Value ricevuto : " + val);
 			log.debug("Consuming Transaction Event - Message received with value {}", cr.value());
 			srvListener(cr.value());
 		} catch (Exception e) {
