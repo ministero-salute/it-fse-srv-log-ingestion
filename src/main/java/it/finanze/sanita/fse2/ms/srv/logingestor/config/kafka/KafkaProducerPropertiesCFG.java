@@ -7,11 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-/**
- *	@author vincenzoingenito
- *
- *	Kafka producer properties configuration.
- */
+
 @Data
 @Component
 public class KafkaProducerPropertiesCFG implements Serializable {

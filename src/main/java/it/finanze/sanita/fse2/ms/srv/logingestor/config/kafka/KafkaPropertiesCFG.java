@@ -7,11 +7,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-/**
- *	@author vincenzoingenito
- *
- *	Kafka properties configuration.
- */
+
 @Data
 @Component
 public class KafkaPropertiesCFG implements Serializable {
@@ -27,7 +23,6 @@ public class KafkaPropertiesCFG implements Serializable {
 	@Value("${kafka.bootstrap-servers}")
 	private String producerBootstrapServers;
 	 
-	
 	/**
 	 * Security protocol.
 	 */

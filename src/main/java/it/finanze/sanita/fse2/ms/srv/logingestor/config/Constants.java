@@ -1,11 +1,6 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.config;
 
-/**
- * 
- * @author vincenzoingenito
- *
- * Constants application.
- */
+
 public final class Constants {
 
 	/**
@@ -37,6 +32,12 @@ public final class Constants {
 		 * Configuration mongo repository path.
 		 */
 		public static final String REPOSITORY_MONGO = "it.sanita.logingestor.repository";
+		
+		/**
+		 * The name of the MongoDB Collection 
+		 */
+		public static final String LOG_COLLECTION_NAME = "log_collector";  
+
 
 		public static final class Collections {
 

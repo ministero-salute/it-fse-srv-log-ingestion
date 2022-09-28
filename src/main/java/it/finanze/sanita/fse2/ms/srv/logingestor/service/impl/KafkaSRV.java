@@ -12,12 +12,7 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.service.IKafkaSRV;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.KafkaAbstractSRV;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * 
- * @author vincenzoingenito
- *
- *         Kafka management service.
- */
+
 @Service
 @Slf4j
 public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
@@ -36,8 +31,10 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 		try {
 			String key = cr.key();
 			String value = cr.value();
-			log.info("Consuming Transaction Event - Message received with key {}", key);
-			log.info("Consuming Transaction Event - Message received with value {}", value);
+			
+			log.debug("Consuming Transaction Event - Message received with key {}", key);
+			log.debug("Consuming Transaction Event - Message received with value {}", value);
+			
 			srvListener(key, value);
 		} catch (Exception e) {
 			deadLetterHelper(e);
@@ -45,7 +42,7 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 		}
 	}
 
-	public void srvListener(final String key, final String value) {
+	private void srvListener(final String key, final String value) {
 		eventsRepo.saveEvent(key, value);
 	}
 

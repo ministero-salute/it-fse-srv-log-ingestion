@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ITransactionEventsRepo;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -19,14 +20,18 @@ public class TransactionEventsRepo implements ITransactionEventsRepo {
 	private static final long serialVersionUID = -4017623557412046071L;
 
 	@Autowired
-	private MongoTemplate mongoTemplate;
-
+	private transient MongoTemplate mongoTemplate;
+	
 	@Override
-	public void saveEvent(String key, String json) {
+	public void saveEvent(String workflowInstanceId, String json) {
 		try {
+			
 			Document doc = Document.parse(json);
-
-			mongoTemplate.save(doc);
+			doc.put("workflow_instance_id", workflowInstanceId);
+			
+			LogCollectorETY collectorETY = new LogCollectorETY(null,doc);
+			
+			mongoTemplate.save(collectorETY);
 			
 		} catch(Exception ex){
 			log.error("Error while save event : " , ex);

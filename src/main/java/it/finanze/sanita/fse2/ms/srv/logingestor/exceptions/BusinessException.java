@@ -3,11 +3,7 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.exceptions;
 
-/**
- * @author vincenzoingenito
- * 
- * Generic business exception.
- */
+
 public class BusinessException extends RuntimeException {
 
 	/**

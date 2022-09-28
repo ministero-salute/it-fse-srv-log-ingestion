@@ -10,11 +10,7 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.ProfileUtility;
 import lombok.Data;
 
-/**
- *	@author vincenzoingenito
- *
- *	Kafka topic configuration.
- */
+
 @Data
 @Component
 public class KafkaTopicCFG {

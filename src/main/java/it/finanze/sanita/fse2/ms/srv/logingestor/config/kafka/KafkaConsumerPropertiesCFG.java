@@ -8,11 +8,7 @@ import org.springframework.stereotype.Component;
 
 import lombok.Data;
 
-/**
- *	@author vincenzoingenito
- *
- *	Kafka consumer properties configuration.
- */
+
 @Data
 @Component
 public class KafkaConsumerPropertiesCFG implements Serializable {
