@@ -43,21 +43,13 @@ public class KafkaProducerCFG {
 		Map<String, Object> props = new HashMap<>();
 
 		InetAddress id = getLocalHost();
-
 		props.put(ProducerConfig.CLIENT_ID_CONFIG, kafkaProducerPropCFG.getClientId() + "-tx" + "-" + id );
-
 		props.put(ProducerConfig.RETRIES_CONFIG, kafkaProducerPropCFG.getRetries());
-
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProducerPropCFG.getProducerBootstrapServers());
-
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerPropCFG.getKeySerializer());
-
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerPropCFG.getValueSerializer());
-
 		props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, id + "-" + kafkaProducerPropCFG.getTransactionalId());
-
 		props.put(ProducerConfig.ACKS_CONFIG,kafkaProducerPropCFG.getAck());
-
 		props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,kafkaProducerPropCFG.getIdempotence());
 		//SSL
 		if(kafkaPropCFG.isEnableSSL()) {
@@ -67,7 +59,6 @@ public class KafkaProducerCFG {
 			props.put("ssl.truststore.location", kafkaPropCFG.getTrustoreLocation());  
 			props.put("ssl.truststore.password", String.valueOf(kafkaPropCFG.getTrustorePassword())); 
 		}
-
 		return props;
 	}
 
@@ -111,13 +102,9 @@ public class KafkaProducerCFG {
 	public Map<String, Object> producerWithoutTransactionConfigs() {
 		Map<String, Object> props = new HashMap<>();
 		props.put(ProducerConfig.CLIENT_ID_CONFIG, kafkaProducerPropCFG.getClientId()+ "-noTx");
-
 		props.put(ProducerConfig.RETRIES_CONFIG, kafkaProducerPropCFG.getRetries());
-
 		props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProducerPropCFG.getProducerBootstrapServers());
-
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerPropCFG.getKeySerializer());
-
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerPropCFG.getValueSerializer());
 		//SSL
 		if(kafkaPropCFG.isEnableSSL()) {

@@ -16,9 +16,9 @@ public class CollectionNaming {
     @Bean("logCollectorBean")
     public String getLogCollectorCollection() {
         if (profileUtility.isTestProfile()) {
-            return Constants.Profile.TEST_PREFIX + Constants.ComponentScan.LOG_COLLECTION_NAME;
+            return Constants.Profile.TEST_PREFIX + Constants.ComponentScan.Collections.LOG_COLLECTION_NAME;
         }
-        return Constants.ComponentScan.LOG_COLLECTION_NAME;
+        return Constants.ComponentScan.Collections.LOG_COLLECTION_NAME;
     }
     
     

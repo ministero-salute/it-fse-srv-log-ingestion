@@ -7,7 +7,7 @@ import org.springframework.messaging.MessageHeaders;
 import org.springframework.stereotype.Service;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ITransactionEventsRepo;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.IKafkaSRV;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.KafkaAbstractSRV;
 import lombok.extern.slf4j.Slf4j;
@@ -23,35 +23,29 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 	private static final long serialVersionUID = 987723954716001270L;
 	
 	@Autowired
-	private ITransactionEventsRepo eventsRepo;
+	private ILogEventsRepo eventsRepo;
 
 	@Override
-	@KafkaListener(topics = "#{'${kafka.srv-log-ingestor.topic}'}", clientIdPrefix = "#{'${kafka.consumer.client-id}'}", containerFactory = "kafkaListenerIngestorContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
+	@KafkaListener(topics = "#{'${kafka.log.base-topic}'}", clientIdPrefix = "#{'${kafka.consumer.client-id}'}", containerFactory = "kafkaListenerIngestorContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
 	public void listener(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders) {
 		try {
-			String key = cr.key();
-			String value = cr.value();
-			
-			log.debug("Consuming Transaction Event - Message received with key {}", key);
-			log.debug("Consuming Transaction Event - Message received with value {}", value);
-			
-			srvListener(key, value);
+			log.debug("Consuming Transaction Event - Message received with value {}", cr.value());
+			srvListener(cr.value());
 		} catch (Exception e) {
 			deadLetterHelper(e);
 			throw new BusinessException(e);
 		}
 	}
 
-	private void srvListener(final String key, final String value) {
-		eventsRepo.saveEvent(key, value);
+	private void srvListener(final String value) {
+		eventsRepo.saveLogEvent(value);
 	}
 
 	/**
 	 * @param e
 	 */
 	private void deadLetterHelper(Exception e) {
-		StringBuilder sb = new StringBuilder(
-				"LIST OF USEFUL EXCEPTIONS TO MOVE TO DEADLETTER OFFSET 'kafka.consumer.dead-letter-exc'. ");
+		StringBuilder sb = new StringBuilder("LIST OF USEFUL EXCEPTIONS TO MOVE TO DEADLETTER OFFSET 'kafka.consumer.dead-letter-exc'. ");
 		boolean continua = true;
 		Throwable excTmp = e;
 		Throwable excNext = null;
@@ -74,10 +68,5 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 
 		log.error("{}", sb);
 	}
-
-	@Override
-	public void sendLoggerStatus(String log) {
-		sendMessage(kafkaTopicCFG.getLogTopic(), "KEY", log, true);
-	}
-
+ 
 }

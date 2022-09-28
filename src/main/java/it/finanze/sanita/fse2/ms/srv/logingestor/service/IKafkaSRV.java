@@ -10,6 +10,5 @@ public interface IKafkaSRV extends Serializable {
 
 	public void listener(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders);
 	
-	void sendLoggerStatus(String log);
 
 }

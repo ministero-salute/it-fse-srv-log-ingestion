@@ -45,30 +45,14 @@ public class KafkaConsumerCFG {
 	public Map<String, Object> consumerConfigs() {
 		Map<String, Object> props = new HashMap<>();
 		
-		log.info("CLIENT_ID_CONFIG: " + kafkaConsumerPropCFG.getClientId());
 		props.put(ConsumerConfig.CLIENT_ID_CONFIG, kafkaConsumerPropCFG.getClientId());
-		
-		log.info("BOOTSTRAP_SERVERS_CONFIG: " + kafkaConsumerPropCFG.getConsumerBootstrapServers());
 		props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaConsumerPropCFG.getConsumerBootstrapServers());
-		
-		log.info("GROUP_ID_CONFIG: " + kafkaConsumerPropCFG.getConsumerGroupId());
 		props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConsumerPropCFG.getConsumerGroupId());
-		
-		log.info("KEY_DESERIALIZER_CLASS_CONFIG: " + kafkaConsumerPropCFG.getConsumerKeyDeserializer());
 		props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaConsumerPropCFG.getConsumerKeyDeserializer());
-		
-		log.info("VALUE_DESERIALIZER_CLASS_CONFIG: " + kafkaConsumerPropCFG.getConsumerValueDeserializer());
 		props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaConsumerPropCFG.getConsumerValueDeserializer());
-		
-		log.info("ISOLATION_LEVEL_CONFIG: " + kafkaConsumerPropCFG.getIsolationLevel());
 		props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, kafkaConsumerPropCFG.getIsolationLevel());
-		
-		log.info("ENABLE_AUTO_COMMIT_CONFIG: " + kafkaConsumerPropCFG.getAutoCommit());
 		props.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaConsumerPropCFG.getAutoCommit());
-		
-		log.info("AUTO_OFFSET_RESET_CONFIG: " + kafkaConsumerPropCFG.getAutoOffsetReset());
 		props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConsumerPropCFG.getAutoOffsetReset());
-		
 		//SSL
 		if (kafkaConsumerPropCFG.isEnableSsl()) { 
 			props.put("security.protocol", kafkaConsumerPropCFG.getProtocol());
@@ -103,9 +87,7 @@ public class KafkaConsumerCFG {
 		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
 		factory.setConsumerFactory(consumerFactory());
 		
-		// Definizione nome topic deadLetter
-		log.info("TOPIC: " + kafkaTopicCFG.getLogIngestorTopic());
-		DeadLetterPublishingRecoverer dlpr = new DeadLetterPublishingRecoverer(deadLetterKafkaTemplate, (consumerRecord, ex) -> new TopicPartition(kafkaTopicCFG.getLogIngestorTopic(), -1));
+		DeadLetterPublishingRecoverer dlpr = new DeadLetterPublishingRecoverer(deadLetterKafkaTemplate, (consumerRecord, ex) -> new TopicPartition(kafkaTopicCFG.getLogTopic(), -1));
 		
 		// Set classificazione errori da gestire per la deadLetter.
 		DefaultErrorHandler sceh = new DefaultErrorHandler(dlpr, new FixedBackOff(FixedBackOff.DEFAULT_INTERVAL, FixedBackOff.UNLIMITED_ATTEMPTS));

@@ -31,17 +31,12 @@ public final class Constants {
 		/**
 		 * Configuration mongo repository path.
 		 */
-		public static final String REPOSITORY_MONGO = "it.sanita.logingestor.repository";
+		public static final String REPOSITORY_MONGO = "it.finanze.sanita.fse2.ms.srv.logingestor.repository";
 		
-		/**
-		 * The name of the MongoDB Collection 
-		 */
-		public static final String LOG_COLLECTION_NAME = "log_collector";  
-
 
 		public static final class Collections {
 
-			public static final String TRANSACTION_DATA = "transaction_data";
+			public static final String LOG_COLLECTION_NAME = "log_collector";
 
 			private Collections() {
 

@@ -17,13 +17,7 @@ public class KafkaTopicCFG {
 
 	@Autowired
 	private ProfileUtility profileUtility;
-
-	/**
-	 * Log Ingestor Topic.
-	 */
-	@Value("${kafka.srv-log-ingestor.topic}")
-	private String logIngestorTopic;
-	
+ 
 	/**
 	 * Log Ingestor Dead letter Topic. 
 	 */
@@ -38,7 +32,7 @@ public class KafkaTopicCFG {
 	@PostConstruct
 	public void afterInit() {
 		if (profileUtility.isTestProfile()) {
-			this.logIngestorTopic = Constants.Profile.TEST_PREFIX + this.logIngestorTopic;
+			this.logTopic = Constants.Profile.TEST_PREFIX + this.logTopic;
 			this.logIngestorDeadLetterTopic = Constants.Profile.TEST_PREFIX + this.logIngestorDeadLetterTopic;
 		}
 	}
