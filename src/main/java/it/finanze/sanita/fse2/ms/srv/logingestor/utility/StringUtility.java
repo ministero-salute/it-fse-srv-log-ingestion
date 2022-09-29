@@ -4,6 +4,10 @@ import com.google.gson.Gson;
 
 public class StringUtility {
 	
+	private StringUtility() {
+		
+	  }
+	
 	/**
 	 * Transformation from Object to Json.
 	 * 
