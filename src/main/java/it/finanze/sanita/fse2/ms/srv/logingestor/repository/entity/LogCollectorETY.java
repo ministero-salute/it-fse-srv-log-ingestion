@@ -17,6 +17,9 @@ public class LogCollectorETY {
 	@Id
 	private String id;
 	
+	@Field(name = "region")
+	private String region;
+	
 	@Field(name = "document")
 	private org.bson.Document doc;
 
