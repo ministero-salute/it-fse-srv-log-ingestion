@@ -36,8 +36,16 @@ public class LogEventsRepo implements ILogEventsRepo {
 			
 			Document doc = Document.parse(json);
 			String issuer = doc.getString("op_issuer");
-			Date startDate = simpleDateFormat.parse(doc.getString("op_timestamp_start"));
-			Date endDate = simpleDateFormat.parse(doc.getString("op_timestamp_end"));
+			
+			Date startDate = null;
+			if(doc.getString("op_timestamp_start")!=null) {
+				startDate = simpleDateFormat.parse(doc.getString("op_timestamp_start")); 
+			}
+			
+			Date endDate = null;
+			if(doc.getString("op_timestamp_end")!=null) {
+				endDate = simpleDateFormat.parse(doc.getString("op_timestamp_end")); 
+			}
 			doc.put("op_timestamp_start", startDate);
 			doc.put("op_timestamp_end", endDate);
 			
