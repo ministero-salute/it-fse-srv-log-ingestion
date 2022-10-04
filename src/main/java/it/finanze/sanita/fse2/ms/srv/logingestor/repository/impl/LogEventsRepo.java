@@ -1,5 +1,9 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,11 +27,20 @@ public class LogEventsRepo implements ILogEventsRepo {
 	@Autowired
 	private transient MongoTemplate mongoTemplate;
 	
+	private static final String pattern = "dd-MM-yyyy HH:mm:ss.SSS";
 	@Override
 	public void saveLogEvent(final String json) {
 		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			simpleDateFormat.setTimeZone(TimeZone.getDefault());
+			
 			Document doc = Document.parse(json);
 			String issuer = doc.getString("op_issuer");
+			Date startDate = simpleDateFormat.parse(doc.getString("op_timestamp_start"));
+			Date endDate = simpleDateFormat.parse(doc.getString("op_timestamp_end"));
+			doc.put("op_timestamp_start", startDate);
+			doc.put("op_timestamp_end", endDate);
+			
 			String region = issuer;
 			if(!StringUtils.isEmpty(issuer)) {
 				int indexSplit = issuer.indexOf("#");
