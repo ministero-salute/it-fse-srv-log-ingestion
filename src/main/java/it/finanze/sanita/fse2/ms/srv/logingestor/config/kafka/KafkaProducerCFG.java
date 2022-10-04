@@ -82,7 +82,7 @@ public class KafkaProducerCFG {
 	@Bean
 	@Qualifier("txkafkatemplateFactory") 
 	public ProducerFactory<String, String> producerFactory() {
-		log.info("Inizializzo la factory transazionale");
+		log.info("Init producer Factory");
 		return new DefaultKafkaProducerFactory<>(producerConfigs());
 	}
 

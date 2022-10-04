@@ -92,7 +92,7 @@ public class KafkaConsumerCFG {
 		// Set classificazione errori da gestire per la deadLetter.
 		DefaultErrorHandler sceh = new DefaultErrorHandler(dlpr, new FixedBackOff(FixedBackOff.DEFAULT_INTERVAL, FixedBackOff.UNLIMITED_ATTEMPTS));
 		
-		log.info("setClassification - kafkaListenerDeadLetterContainerFactory: ");
+		log.debug("setClassification - kafkaListenerDeadLetterContainerFactory: ");
 		setClassification(sceh);
 		
 		// da eliminare se non si volesse gestire la dead letter
@@ -105,7 +105,7 @@ public class KafkaConsumerCFG {
 		List<Class<? extends Exception>> out = getExceptionsConfig();
 
 		for (Class<? extends Exception> ex : out) {
-			log.info("addNotRetryableException: " + ex);
+			log.warn("addNotRetryableException: " + ex);
 			sceh.addNotRetryableExceptions(ex);
 		}
 		
