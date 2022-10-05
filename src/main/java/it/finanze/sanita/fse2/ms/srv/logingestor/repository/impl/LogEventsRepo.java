@@ -2,12 +2,16 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
@@ -62,5 +66,32 @@ public class LogEventsRepo implements ILogEventsRepo {
 			throw new BusinessException("Error while save event : " , ex);
 		}
 	}
-	 
+
+	@Override
+	public List<Document> getLogEvents(String region, Date startDate, Date endDate, String docType) {
+		List<Document> out = null;
+		try {
+			Query query = new Query();
+			
+			if(region==null && docType==null) {
+				query.addCriteria(Criteria.where("op_timestamp_start").is(startDate).and("op_timestamp_end").is(endDate));
+			} else if(region==null) {
+				query.addCriteria(Criteria.where("op_timestamp_start").is(startDate).and("op_timestamp_end").is(endDate)
+				.and("document").is(docType));
+			} else if(docType==null){
+				query.addCriteria(Criteria.where("region").is(region).and("op_timestamp_start").is(startDate).and("op_timestamp_end").is(endDate));
+			} else {
+				query.addCriteria(Criteria.where("region").is(region).and("op_timestamp_start").is(startDate)
+						.and("op_timestamp_end").is(endDate).and("document").is(docType));
+			}
+			query.limit(100).with(Sort.by("op_timestamp_start").descending());
+			
+			out = mongoTemplate.find(query, Document.class, "log_collector");
+		} catch (Exception e) {
+			log.error("Error while getting records : " , e);
+			throw new BusinessException("Error while getting records : " , e);
+		}		
+		return out;
+	}
+	
 }
