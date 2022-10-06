@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.utility.StringUtility;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -72,20 +73,19 @@ public class LogEventsRepo implements ILogEventsRepo {
 		List<Document> out = null;
 		try {
 			Query query = new Query();
+			Criteria cri = new Criteria();
 			
-			if(region==null && docType==null) {
-				query.addCriteria(Criteria.where("op_timestamp_start").is(startDate).and("op_timestamp_end").is(endDate));
-			} else if(region==null) {
-				query.addCriteria(Criteria.where("op_timestamp_start").is(startDate).and("op_timestamp_end").is(endDate)
-				.and("document").is(docType));
-			} else if(docType==null){
-				query.addCriteria(Criteria.where("region").is(region).and("op_timestamp_start").is(startDate).and("op_timestamp_end").is(endDate));
-			} else {
-				query.addCriteria(Criteria.where("region").is(region).and("op_timestamp_start").is(startDate)
-						.and("op_timestamp_end").is(endDate).and("document").is(docType));
-			}
-			query.limit(100).with(Sort.by("op_timestamp_start").descending());
+			cri.andOperator(Criteria.where("document.document.op_timestamp_start").is(startDate).and("document.document.op_timestamp_end").is(endDate));
+			if(!StringUtility.isNullOrEmpty(region)) {
+				cri.and("document.region").is(region);
+			} 
 			
+			if(!StringUtility.isNullOrEmpty(docType)){
+				cri.and("document.op_document_type").is(region);
+				
+			} 
+			
+			query.limit(100).with(Sort.by("document.op_timestamp_start").ascending());			
 			out = mongoTemplate.find(query, Document.class, "log_collector");
 		} catch (Exception e) {
 			log.error("Error while getting records : " , e);
