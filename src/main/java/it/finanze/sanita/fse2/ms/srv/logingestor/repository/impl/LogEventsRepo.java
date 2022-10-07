@@ -2,22 +2,17 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
-import it.finanze.sanita.fse2.ms.srv.logingestor.utility.StringUtility;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -68,30 +63,4 @@ public class LogEventsRepo implements ILogEventsRepo {
 		}
 	}
 
-	@Override
-	public List<Document> getLogEvents(String region, Date startDate, Date endDate, String docType) {
-		List<Document> out = null;
-		try {
-			Query query = new Query();
-			Criteria cri = new Criteria();
-			
-			cri.andOperator(Criteria.where("document.document.op_timestamp_start").is(startDate).and("document.document.op_timestamp_end").is(endDate));
-			if(!StringUtility.isNullOrEmpty(region)) {
-				cri.and("document.region").is(region);
-			} 
-			
-			if(!StringUtility.isNullOrEmpty(docType)){
-				cri.and("document.op_document_type").is(region);
-				
-			} 
-			
-			query.limit(100).with(Sort.by("document.op_timestamp_start").ascending());			
-			out = mongoTemplate.find(query, Document.class, "log_collector");
-		} catch (Exception e) {
-			log.error("Error while getting records : " , e);
-			throw new BusinessException("Error while getting records : " , e);
-		}		
-		return out;
-	}
-	
 }

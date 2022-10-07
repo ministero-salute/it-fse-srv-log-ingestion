@@ -21,5 +21,4 @@ public class CollectionNaming {
         return Constants.ComponentScan.Collections.LOG_COLLECTION_NAME;
     }
     
-    
 }
