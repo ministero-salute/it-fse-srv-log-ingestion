@@ -1,6 +1,7 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.controller.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -30,11 +31,16 @@ public class ControllerTest extends AbstractCTL implements IControllerTest {
 	@Override
 	public LogControllerResDTO getLogEvents(String region, Date startDate, Date endDate, String docType) {
 		List<Document> res = new ArrayList<>();		
-		final LogTraceInfoDTO traceInfoDTO = getLogTraceInfo();		
+		final LogTraceInfoDTO traceInfoDTO = getLogTraceInfo();					
+	
 		int result = startDate.compareTo(endDate);
-		
+
 		try {
 			if(result==0 || result<0){
+				
+				startDate = setHoursToDate(startDate, 00,00,00);
+				endDate = setHoursToDate(endDate, 23,59,59);
+				
 				res = logEventsSrv.getLogEvents(region, startDate, endDate, docType);
 			}
 			else {
@@ -45,5 +51,23 @@ public class ControllerTest extends AbstractCTL implements IControllerTest {
 		}
 		return new LogControllerResDTO(traceInfoDTO, res);
 	}
+	
+	/**
+	 * Set hours to Date
+	 */
+	public Date setHoursToDate(Date date, int hours, int minutes, int seconds) {
+		Date result = null;
+		
+	    Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    calendar.set(Calendar.HOUR_OF_DAY, hours);
+		calendar.set(Calendar.MINUTE, minutes);
+		calendar.set(Calendar.SECOND, seconds);
+	    
+		result = calendar.getTime();
+		
+		return result;
+	}
+
 
 }

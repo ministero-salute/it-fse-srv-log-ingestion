@@ -75,16 +75,18 @@ public class LogEventsRepo implements ILogEventsRepo {
 			Query query = new Query();
 			Criteria cri = new Criteria();
 			
-			cri.andOperator(Criteria.where("document.document.op_timestamp_start").is(startDate).and("document.document.op_timestamp_end").is(endDate));
+			cri.andOperator(Criteria.where("document.op_timestamp_start").gte(startDate).and("document.op_timestamp_end").lte(endDate));
 			if(!StringUtility.isNullOrEmpty(region)) {
 				cri.and("document.region").is(region);
 			} 
 			
 			if(!StringUtility.isNullOrEmpty(docType)){
-				cri.and("document.op_document_type").is(region);
+				cri.and("document.op_document_type").is(docType);
 				
 			} 
-			
+
+			query.addCriteria(cri);
+		
 			query.limit(100).with(Sort.by("document.op_timestamp_start").ascending());			
 			out = mongoTemplate.find(query, Document.class, "log_collector");
 		} catch (Exception e) {
