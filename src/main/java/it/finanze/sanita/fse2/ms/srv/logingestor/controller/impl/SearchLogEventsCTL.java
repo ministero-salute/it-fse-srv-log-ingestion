@@ -32,6 +32,10 @@ public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsC
 	public LogControllerResDTO getLogEvents(String region, Date startDate, Date endDate, String docType) {
 		List<Document> res = new ArrayList<>();		
 
+		if(startDate==null || endDate==null) {
+			throw new ValidationException("Attenzione: valorizzare correttamente startDate e endDate");
+		}
+
 		if(startDate.after(endDate)) {
 			throw new ValidationException("Data start maggiore di data end");
 		}
