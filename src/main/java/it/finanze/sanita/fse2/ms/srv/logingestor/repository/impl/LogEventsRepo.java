@@ -77,12 +77,11 @@ public class LogEventsRepo implements ILogEventsRepo {
 			
 			cri.andOperator(Criteria.where("document.op_timestamp_start").gte(startDate).and("document.op_timestamp_end").lte(endDate));
 			if(!StringUtility.isNullOrEmpty(region)) {
-				cri.and("document.region").is(region);
+				cri.and("region").gte(region);
 			} 
 			
 			if(!StringUtility.isNullOrEmpty(docType)){
-				cri.and("document.op_document_type").is(docType);
-				
+				cri.and("document.op_document_type").gte(docType);
 			} 
 
 			query.addCriteria(cri);
