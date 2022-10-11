@@ -5,7 +5,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.AbstractDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

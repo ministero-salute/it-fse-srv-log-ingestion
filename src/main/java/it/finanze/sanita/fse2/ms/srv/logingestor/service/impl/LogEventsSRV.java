@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 public class LogEventsSRV implements ILogEventsSRV {
 	
 	@Autowired
-	LogEventsRepo eventsRepo;
+	private LogEventsRepo eventsRepo;
 	
 	@Override
 	public List<Document> getLogEvents(String region, Date startDate, Date endDate, String docType) {
