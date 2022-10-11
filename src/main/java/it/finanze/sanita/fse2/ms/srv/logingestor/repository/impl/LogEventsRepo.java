@@ -33,6 +33,7 @@ public class LogEventsRepo implements ILogEventsRepo {
 	private transient MongoTemplate mongoTemplate;
 	
 	private static final String pattern = "dd-MM-yyyy HH:mm:ss.SSS";
+	
 	@Override
 	public void saveLogEvent(final String json) {
 		try {
@@ -77,16 +78,15 @@ public class LogEventsRepo implements ILogEventsRepo {
 			
 			cri.andOperator(Criteria.where("document.op_timestamp_start").gte(startDate).and("document.op_timestamp_end").lte(endDate));
 			if(!StringUtility.isNullOrEmpty(region)) {
-				cri.and("region").gte(region);
+				cri.and("region").is(region);
 			} 
 			
 			if(!StringUtility.isNullOrEmpty(docType)){
-				cri.and("document.op_document_type").gte(docType);
+				cri.and("document.op_document_type").is(docType);
 			} 
-
+			query.fields().exclude("_id");
 			query.addCriteria(cri);
-		
-			query.limit(100).with(Sort.by("document.op_timestamp_start").ascending());			
+			query.limit(100).with(Sort.by("document.op_timestamp_start").descending());			
 			out = mongoTemplate.find(query, Document.class, "log_collector");
 		} catch (Exception e) {
 			log.error("Error while getting records : " , e);

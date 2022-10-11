@@ -17,11 +17,11 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.ErrorResponseDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogControllerResDTO;
 
 @RequestMapping(path = "/v1")
-public interface IControllerTest {
+public interface ISearchLogEventsCTL {
 	
-	@GetMapping(value = "/logController")
+	@GetMapping(value = "/search-events-log")
 	@ApiResponse(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = LogControllerResDTO.class)))
-	@Operation(summary = "Ricerca records", description = "Ricerca dei record delle loggate in base a data, regione e tipo documento")
+	@Operation(summary = "Ricerca log", description = "Ricerca dei record delle loggate in base a data, regione e tipo documento")
 	@ApiResponses(value = { 
 			@ApiResponse(responseCode = "201", description = "Ricerca eseguita correttamente", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = LogControllerResDTO.class))),
 			@ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDTO.class))),

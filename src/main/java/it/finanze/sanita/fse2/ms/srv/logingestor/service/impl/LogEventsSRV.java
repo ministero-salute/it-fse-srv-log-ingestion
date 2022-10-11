@@ -27,6 +27,7 @@ public class LogEventsSRV implements ILogEventsSRV {
 		try {
 			out = eventsRepo.getLogEvents(region, startDate, endDate, docType);
 		} catch (Exception e) {
+			log.error("Error while getting log events: ", e);
 			throw new BusinessException("Error while getting log events: ", e);
 		}
 		return out;
