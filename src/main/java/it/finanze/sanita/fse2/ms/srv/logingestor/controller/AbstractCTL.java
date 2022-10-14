@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import brave.Tracer;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogTraceInfoDTO;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 public abstract class AbstractCTL implements Serializable {
 
 	/**

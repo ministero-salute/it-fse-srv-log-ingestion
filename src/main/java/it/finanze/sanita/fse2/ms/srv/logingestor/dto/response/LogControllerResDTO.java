@@ -2,8 +2,7 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.dto.response;
 
 import java.util.List;
 
-import org.bson.Document;
-
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,15 +15,15 @@ public class LogControllerResDTO extends ResponseDTO {
 	 */
 	private static final long serialVersionUID = 1630931782215900987L;
 
-	private List<Document> document;
+	private List<LogCollectorETY> entity;
 	
 	public LogControllerResDTO() {
 		super();
 	}
 
-	public LogControllerResDTO(final LogTraceInfoDTO traceInfo, final List<Document> inDocument) {
+	public LogControllerResDTO(final LogTraceInfoDTO traceInfo, final List<LogCollectorETY> inEntity) {
 		super(traceInfo);
-		document = inDocument;
+		entity = inEntity;
 	}
 	
 }

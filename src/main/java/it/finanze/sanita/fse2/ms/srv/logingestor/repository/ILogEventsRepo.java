@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.bson.Document;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
 
 public interface ILogEventsRepo extends Serializable {
   
 	void saveLogEvent(String json);
 	
-	List<Document> getLogEvents(String region, Date startDate, Date endDate, String docType);
+	List<LogCollectorETY> getLogEvents(String region, Date startDate, Date endDate, String docType);
 	
 }

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +12,7 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.controller.AbstractCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.controller.ISearchLogEventsCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogControllerResDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.ValidationException;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.ILogEventsSRV;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.DateUtility;
 
@@ -30,7 +30,7 @@ public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsC
 
 	@Override
 	public LogControllerResDTO getLogEvents(String region, Date startDate, Date endDate, String docType) {
-		List<Document> res = new ArrayList<>();		
+		List<LogCollectorETY> res = new ArrayList<>();		
 
 		if(startDate==null || endDate==null) {
 			throw new ValidationException("Attenzione: valorizzare correttamente startDate e endDate");

@@ -70,8 +70,8 @@ public class LogEventsRepo implements ILogEventsRepo {
 	}
 
 	@Override
-	public List<Document> getLogEvents(String region, Date startDate, Date endDate, String docType) {
-		List<Document> out = null;
+	public List<LogCollectorETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
+		List<LogCollectorETY> out = null;
 		try {
 			Query query = new Query();
 			Criteria cri = new Criteria();
@@ -86,8 +86,8 @@ public class LogEventsRepo implements ILogEventsRepo {
 			} 
 			query.fields().exclude("_id");
 			query.addCriteria(cri);
-			query.limit(100).with(Sort.by("document.op_timestamp_start").descending());			
-			out = mongoTemplate.find(query, Document.class, "log_collector");
+			query.limit(100).with(Sort.by("document.op_timestamp_start").descending());
+			out = mongoTemplate.find(query, LogCollectorETY.class);
 		} catch (Exception e) {
 			log.error("Error while getting records : " , e);
 			throw new BusinessException("Error while getting records : " , e);
