@@ -37,19 +37,20 @@ public final class Constants {
 		public static final String REPOSITORY_MONGO = "it.finanze.sanita.fse2.ms.srv.logingestor.repository";
 		
 
-		public static final class Collections {
-
-			public static final String LOG_COLLECTION_NAME = "log_collector";
-
-			private Collections() {
-
-			}
-		}
 		
 		private ComponentScan() {
 			//This method is intentionally left blank.
 		}
 
+	}
+	
+	public static final class Collections {
+
+		public static final String LOG_COLLECTION_NAME = "log_collector";
+
+		private Collections() {
+
+		}
 	}
  
 	
