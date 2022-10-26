@@ -3,10 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>it.finanze.sanita.fse2.ms.srv.logingestor</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>it.finanze.sanita.fse2</groupId>
+	<artifactId>log-ingestion-ms</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>eds-srv-log-ingestion</name>
+	<name>log-ingestion-ms</name>
 	<description>EDS Log ingestion</description>
 
 	<parent>
