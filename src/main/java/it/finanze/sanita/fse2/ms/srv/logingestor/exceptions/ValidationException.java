@@ -7,7 +7,6 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.ErrorResponseDTO;
 import lombok.Getter;
 
 /**
- * @author vincenzoingenito
  * 
  * Validation exeception.
  *
