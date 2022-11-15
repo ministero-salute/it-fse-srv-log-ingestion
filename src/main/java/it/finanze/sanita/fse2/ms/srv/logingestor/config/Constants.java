@@ -4,6 +4,8 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.config;
 
 
+import java.util.regex.Pattern;
+
 public final class Constants {
 
     /**
@@ -81,8 +83,25 @@ public final class Constants {
 		private App() {}
 
 		public static class Regex {
+
 			private Regex() {}
-			public static final String NUM_REGEX = "\\d{3}";
+
+			public static final String ASL_REGEX = "^\\d{3}";
+			public static final String PRIVATE_HOSPITAL = "^\\d{6}$";
+			public static final String PRIVATE_SSN_HOSPITAL_REGEX = "^\\d{9}$";
+			public static final String PRIVATE_DOCTOR = "^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$";
+			public static final String MMG_PLS_REGEX = "^[0-9]{3}.*[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$";
+			public static final String COMPLEX_STRUCTURE_REGEX = "^\\d{3}.*[a-zA-Z0-9]+$";
+
+			public static class Compiled {
+				private Compiled() {}
+				public static final Pattern COMPILED_ASL_REGEX = Pattern.compile(ASL_REGEX);
+				public static final Pattern COMPILED_PRIVATE_HOSPITAL_REGEX = Pattern.compile(PRIVATE_HOSPITAL);
+				public static final Pattern COMPILED_PRIVATE_SSN_HOSPITAL_REGEX = Pattern.compile(PRIVATE_SSN_HOSPITAL_REGEX);
+				public static final Pattern COMPILED_PRIVATE_DOCTOR_REGEX = Pattern.compile(PRIVATE_DOCTOR);
+				public static final Pattern COMPILED_MMG_PLS_REGEX = Pattern.compile(MMG_PLS_REGEX);
+				public static final Pattern COMPILED_COMPLEX_STRUCTURE = Pattern.compile(COMPLEX_STRUCTURE_REGEX);
+			}
 		}
 
 		public static class Custom {
