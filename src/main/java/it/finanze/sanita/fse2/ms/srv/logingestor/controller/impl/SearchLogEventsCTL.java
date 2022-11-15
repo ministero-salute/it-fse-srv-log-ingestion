@@ -3,13 +3,6 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.controller.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.finanze.sanita.fse2.ms.srv.logingestor.controller.AbstractCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.controller.ISearchLogEventsCTL;
@@ -18,6 +11,11 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.ValidationException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.ILogEventsSRV;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.DateUtility;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @Tag(name = "Log Controller")
@@ -29,24 +27,22 @@ public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsC
 	private static final long serialVersionUID = -293930001283648727L;
 
 	@Autowired
-	private ILogEventsSRV logEventsSrv;
+	private transient ILogEventsSRV logEventsSrv;
 
 	@Override
 	public LogControllerResDTO getLogEvents(String region, Date startDate, Date endDate, String docType) {
-		List<LogCollectorETY> res = new ArrayList<>();		
-
-		if(startDate==null || endDate==null) {
+		if (startDate==null || endDate==null) {
 			throw new ValidationException("Attenzione: valorizzare correttamente startDate e endDate");
 		}
 
-		if(startDate.after(endDate)) {
+		if (startDate.after(endDate)) {
 			throw new ValidationException("Data start maggiore di data end");
 		}
 
-		startDate = DateUtility.setHoursToDate(startDate, 00,00,00);
+		startDate = DateUtility.setHoursToDate(startDate, 0, 0, 0);
 		endDate = DateUtility.setHoursToDate(endDate, 23,59,59);
 
-		res = logEventsSrv.getLogEvents(region, startDate, endDate, docType);
+		List<LogCollectorETY> res = logEventsSrv.getLogEvents(region, startDate, endDate, docType);
 
 		return new LogControllerResDTO(getLogTraceInfo(), res);
 	}

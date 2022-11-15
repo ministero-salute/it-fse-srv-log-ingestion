@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -50,7 +52,7 @@ class LogEventsTest {
 	@DisplayName("Save json and search it in collection")
 	void save(final int numEntities) {
 
-		final String json = "{\"test\":\"value\"}";
+		final String json = "{\"op_document_type\":\"value\"}";
 		for (int i = 0; i < numEntities; i++) {
 			eventsRepo.saveLogEvent(json);
 		}
@@ -73,16 +75,20 @@ class LogEventsTest {
 		doc.put("op_timestamp_end", endDate);
 		doc.put("op_document_type", docType);
 
-		LogCollectorETY ety = new LogCollectorETY(null, region, doc);
+		IssuerDTO issuerDTO = new IssuerDTO();
+		issuerDTO.setRegion(region);
+		doc.put("op_issuer", Document.parse(JsonUtility.objectToJson(issuerDTO)));
+
+		LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 
 		mongoTemplate.insert(ety);
 
 		List<LogCollectorETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
 
 		assertEquals(1, result.size());
-		assertEquals(ety.getDoc().get("op_document_type"), result.get(0).getDoc().get("op_document_type"));
-		assertEquals(ety.getDoc().get("op_timestamp_start"), result.get(0).getDoc().get("op_timestamp_start"));
-		assertEquals(ety.getDoc().get("op_timestamp_end"), result.get(0).getDoc().get("op_timestamp_end"));
+		assertEquals(ety.getDocumentType(),result.get(0).getDocumentType());
+		assertEquals(ety.getTimestampStart(), result.get(0).getTimestampStart());
+		assertEquals(ety.getTimestampEnd(), result.get(0).getTimestampEnd());
 
 		log.info("LOG ETY: " + result.get(0).toString());
 	}
@@ -111,7 +117,7 @@ class LogEventsTest {
 		doc.put("op_timestamp_end", endDate);
 		doc.put("op_document_type", docType);
 
-		LogCollectorETY ety = new LogCollectorETY(null, region, doc);
+		LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 
 		mongoTemplate.insert(ety);
 		
@@ -135,7 +141,7 @@ class LogEventsTest {
 		doc.put("op_timestamp_end", endDate);
 		doc.put("op_document_type", docType);
 
-		LogCollectorETY ety = new LogCollectorETY(null, region, doc);
+		LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 
 		mongoTemplate.insert(ety);
 

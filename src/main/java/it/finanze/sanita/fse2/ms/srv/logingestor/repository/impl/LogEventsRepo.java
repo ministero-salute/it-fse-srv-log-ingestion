@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +23,6 @@ import org.springframework.stereotype.Repository;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
-import it.finanze.sanita.fse2.ms.srv.logingestor.utility.StringUtility;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,37 +37,34 @@ public class LogEventsRepo implements ILogEventsRepo {
 	@Autowired
 	private transient MongoTemplate mongoTemplate;
 	
-	private static final String pattern = "dd-MM-yyyy HH:mm:ss.SSS";
-	
 	@Override
 	public void saveLogEvent(final String json) {
 		try {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);
 			simpleDateFormat.setTimeZone(TimeZone.getDefault());
-			
+
 			Document doc = Document.parse(json);
-			String issuer = doc.getString("op_issuer");
+			String issuer = doc.getString(Constants.Mongo.Fields.OP_ISSUER);
+			doc.remove(Constants.Mongo.Fields.OP_ISSUER);
 			
 			Date startDate = null;
-			if(doc.getString("op_timestamp_start")!=null) {
-				startDate = simpleDateFormat.parse(doc.getString("op_timestamp_start")); 
+			if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START) != null) {
+				startDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START));
 			}
 			
 			Date endDate = null;
-			if(doc.getString("op_timestamp_end")!=null) {
-				endDate = simpleDateFormat.parse(doc.getString("op_timestamp_end")); 
+			if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END) != null) {
+				endDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END));
 			}
-			doc.put("op_timestamp_start", startDate);
-			doc.put("op_timestamp_end", endDate);
-			
-			String region = issuer;
-			if(!StringUtils.isEmpty(issuer)) {
-				int indexSplit = issuer.indexOf("#");
-				if(indexSplit!=-1) {
-					region = issuer.substring(indexSplit+1, indexSplit+4);
-				} 
+			doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_START, startDate);
+			doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_END, endDate);
+
+			if (!StringUtils.isEmpty(issuer)) {
+				IssuerDTO issuerDTO = IssuerDTO.decodeIssuer(issuer);
+				doc.put(Constants.Mongo.Fields.OP_ISSUER, Document.parse(JsonUtility.objectToJson(issuerDTO)));
 			}
-			mongoTemplate.save(new LogCollectorETY(null,region,doc));
+			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
+			mongoTemplate.save(ety);
 		} catch(Exception ex){
 			log.error("Error while save event : " , ex);
 			throw new BusinessException("Error while save event : " , ex);
@@ -74,28 +73,25 @@ public class LogEventsRepo implements ILogEventsRepo {
 
 	@Override
 	public List<LogCollectorETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
-		List<LogCollectorETY> out = null;
 		try {
 			Query query = new Query();
-			Criteria cri = new Criteria();
-			
-			cri.andOperator(Criteria.where("document.op_timestamp_start").gte(startDate).and("document.op_timestamp_end").lte(endDate));
-			if(!StringUtility.isNullOrEmpty(region)) {
-				cri.and("region").is(region);
+			Criteria cri = Criteria.where(Constants.Mongo.Fields.OP_TIMESTAMP_START).gte(startDate).and(Constants.Mongo.Fields.OP_TIMESTAMP_END).lte(endDate);
+
+			if(!StringUtils.isEmpty(region)) {
+				cri.and(Constants.Mongo.Query.REGION).is(region);
 			} 
 			
-			if(!StringUtility.isNullOrEmpty(docType)){
-				cri.and("document.op_document_type").is(docType);
+			if(!StringUtils.isEmpty(docType)){
+				cri.and(Constants.Mongo.Fields.OP_DOCUMENT_TYPE).is(docType);
 			} 
-			query.fields().exclude("_id");
+			query.fields().exclude(Constants.Mongo.Fields.ID);
 			query.addCriteria(cri);
-			query.limit(100).with(Sort.by("document.op_timestamp_start").descending());
-			out = mongoTemplate.find(query, LogCollectorETY.class);
+			query.limit(100).with(Sort.by(Constants.Mongo.Fields.OP_TIMESTAMP_START).descending());
+			return mongoTemplate.find(query, LogCollectorETY.class);
 		} catch (Exception e) {
 			log.error("Error while getting records : " , e);
 			throw new BusinessException("Error while getting records : " , e);
 		}		
-		return out;
 	}
 	
 }

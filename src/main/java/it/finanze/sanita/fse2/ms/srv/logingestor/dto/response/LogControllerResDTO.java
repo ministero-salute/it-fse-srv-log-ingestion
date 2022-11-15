@@ -18,7 +18,7 @@ public class LogControllerResDTO extends ResponseDTO {
 	 */
 	private static final long serialVersionUID = 1630931782215900987L;
 
-	private List<LogCollectorETY> entity;
+	private transient List<LogCollectorETY> entity;
 	
 	public LogControllerResDTO() {
 		super();
