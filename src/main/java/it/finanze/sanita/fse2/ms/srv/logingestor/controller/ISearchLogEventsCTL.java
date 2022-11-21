@@ -16,10 +16,12 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.ErrorResponseDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogControllerResDTO;
 
 @RequestMapping(path = "/v1")
+@Tag(name = "Log Controller")
 public interface ISearchLogEventsCTL {
 	
 	@GetMapping(value = "/search-events-log")

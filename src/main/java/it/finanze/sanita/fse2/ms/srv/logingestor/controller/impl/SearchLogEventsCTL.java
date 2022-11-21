@@ -3,7 +3,12 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.controller.impl;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
+
 import it.finanze.sanita.fse2.ms.srv.logingestor.controller.AbstractCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.controller.ISearchLogEventsCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogControllerResDTO;
@@ -11,14 +16,8 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.ValidationException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.ILogEventsSRV;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.DateUtility;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Date;
-import java.util.List;
 
 @RestController
-@Tag(name = "Log Controller")
 public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsCTL {
 
 	/**
