@@ -11,7 +11,8 @@ import org.springframework.messaging.MessageHeaders;
 
 public interface IKafkaSRV extends Serializable {
 
-	public void listener(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders);
+	void listenerGtwTopic(ConsumerRecord<String, String> cr, MessageHeaders messageHeaders);
 	
+	void listenerEdsTopic(ConsumerRecord<String, String> cr, MessageHeaders messageHeaders);
 
 }

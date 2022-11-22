@@ -18,16 +18,7 @@ public final class Constants {
 		 */
 		public static final String BASE = "it.finanze.sanita.fse2.ms.srv.logingestor";
 
-		/**
-		 * Controller path.
-		 */
-		public static final String CONTROLLER = "it.finanze.sanita.fse2.ms.srv.logingestor.controller";
 
-		/**
-		 * Configuration path.
-		 */
-		public static final String CONFIG = "it.finanze.sanita.fse2.ms.srv.logingestor.config";
-		 
 		/**
 		 * Configuration mongo path.
 		 */
