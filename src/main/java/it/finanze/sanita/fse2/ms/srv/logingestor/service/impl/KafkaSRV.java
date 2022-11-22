@@ -41,7 +41,7 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 	}
 	
 	@Override
-	@KafkaListener(topics = "#{'${kafka.log.base-eds-topic}'}", clientIdPrefix = "#{'${kafka.consumer.client-id}'}", containerFactory = "kafkaListenerIngestorContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
+	@KafkaListener(topics = "#{'${kafka.log.base-eds-topic}'}", clientIdPrefix = "#{'${kafka.consumer-eds.client-id}'}", containerFactory = "kafkaListenerIngestorEdsContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
 	public void listenerEdsTopic(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders) {
 		try {
 			log.debug("Consuming Transaction Event - Message received with value {}", cr.value());

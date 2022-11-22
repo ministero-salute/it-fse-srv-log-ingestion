@@ -30,6 +30,16 @@ public class KafkaTopicCFG {
 
 	@Value("${kafka.log.base-topic}")
 	private String logTopic;
+	
+	/**
+	 * Log Ingestor Dead letter Topic. 
+	 */
+	@Value("${kafka.srv-log-ingestor-eds.deadletter.topic}")
+	private String logIngestorDeadLetterTopicEds;
+	
+
+	@Value("${kafka.log.base-eds-topic}")
+	private String logTopicEds;
 
 
 	@PostConstruct
