@@ -80,6 +80,14 @@ public class LogCollectorETY {
 	@JsonProperty(Constants.Mongo.Fields.GATEWAY_NAME)
 	private String gatewayName;
 
+	@Field(name = Constants.Mongo.Fields.OP_WARNING)
+	@JsonProperty(Constants.Mongo.Fields.OP_WARNING)
+	private String warning;
+	
+	@Field(name = Constants.Mongo.Fields.OP_WARNING_DESCRIPTION)
+	@JsonProperty(Constants.Mongo.Fields.OP_WARNING_DESCRIPTION)
+	private String warningDescription;
+	
 	@Field(name = Constants.Mongo.Fields.MICROSERVICE_NAME)
 	@JsonProperty(Constants.Mongo.Fields.MICROSERVICE_NAME)
 	private String microserviceName;

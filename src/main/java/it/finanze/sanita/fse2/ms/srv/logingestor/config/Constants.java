@@ -127,6 +127,8 @@ public final class Constants {
 			public static final String OP_ROLE = "op_role";
 			public static final String OP_FISCAL_CODE = "op_fiscal_code";
 			public static final String GATEWAY_NAME = "gateway_name";
+			public static final String OP_WARNING = "op_warning";
+			public static final String OP_WARNING_DESCRIPTION = "op_warning_description";
 		}
 	}
   
