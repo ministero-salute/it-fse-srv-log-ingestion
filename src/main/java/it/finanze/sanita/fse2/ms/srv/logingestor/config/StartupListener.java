@@ -27,7 +27,7 @@ public class StartupListener {
 	}
 
 	private void ensureIndexes() {
-		mongoTemplate.indexOps(LogCollectorETY.class).ensureIndex(new Index().on("region", Direction.DESC).background());
+		mongoTemplate.indexOps(LogCollectorETY.class).ensureIndex(new Index().on("op_issuer.region", Direction.DESC).background());
 	}
 	 
 }
