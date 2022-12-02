@@ -82,7 +82,7 @@ public final class Constants {
 			public static final String PRIVATE_SSN_HOSPITAL_REGEX = "^\\d{9}$";
 			public static final String PRIVATE_DOCTOR = "^[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$";
 			public static final String MMG_PLS_REGEX = "^\\d{3}.*[A-Z]{6}\\d{2}[A-Z]\\d{2}[A-Z]\\d{3}[A-Z]$";
-			public static final String COMPLEX_STRUCTURE_REGEX = "^\\d{3}.*[a-zA-Z0-9]+$";
+			public static final String COMPLEX_STRUCTURE_REGEX = "(^\\d{3}.*[a-zA-Z0-9]+$)++";
 
 			public static class Compiled {
 				private Compiled() {}
