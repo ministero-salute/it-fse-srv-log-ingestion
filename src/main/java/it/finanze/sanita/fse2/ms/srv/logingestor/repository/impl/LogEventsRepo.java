@@ -10,6 +10,7 @@ import java.util.TimeZone;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
@@ -45,7 +46,9 @@ public class LogEventsRepo implements ILogEventsRepo {
 
 			Document doc = Document.parse(json);
 			String issuer = doc.getString(Constants.Mongo.Fields.OP_ISSUER);
+			String locality = doc.getString(Constants.Mongo.Fields.OP_LOCALITY);
 			doc.remove(Constants.Mongo.Fields.OP_ISSUER);
+			doc.remove(Constants.Mongo.Fields.OP_LOCALITY);
 			
 			Date startDate = null;
 			if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START) != null) {
@@ -59,10 +62,16 @@ public class LogEventsRepo implements ILogEventsRepo {
 			doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_START, startDate);
 			doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_END, endDate);
 
-			if (!StringUtils.isEmpty(issuer)) {
+			if (StringUtils.isNotEmpty(issuer)) {
 				IssuerDTO issuerDTO = IssuerDTO.decodeIssuer(issuer);
 				doc.put(Constants.Mongo.Fields.OP_ISSUER, Document.parse(JsonUtility.objectToJson(issuerDTO)));
 			}
+
+			if (StringUtils.isNotEmpty(locality)) {
+				LocalityDTO localityDTO = LocalityDTO.decodeLocality(locality);
+				doc.put(Constants.Mongo.Fields.OP_LOCALITY, Document.parse(JsonUtility.objectToJson(localityDTO)));
+			}
+
 			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 			mongoTemplate.save(ety);
 		} catch(Exception ex){

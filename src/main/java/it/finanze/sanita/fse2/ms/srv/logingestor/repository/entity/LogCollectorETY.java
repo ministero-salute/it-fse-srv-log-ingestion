@@ -64,6 +64,10 @@ public class LogCollectorETY {
 	@JsonProperty(Constants.Mongo.Fields.OP_ISSUER)
 	private IssuerDTO issuer;
 
+	@Field(name = Constants.Mongo.Fields.OP_LOCALITY)
+	@JsonProperty(Constants.Mongo.Fields.OP_LOCALITY)
+	private String locality;
+
 	@Field(name = Constants.Mongo.Fields.OP_DOCUMENT_TYPE)
 	@JsonProperty(Constants.Mongo.Fields.OP_DOCUMENT_TYPE)
 	private String documentType;

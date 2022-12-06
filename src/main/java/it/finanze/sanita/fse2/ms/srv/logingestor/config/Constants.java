@@ -122,6 +122,7 @@ public final class Constants {
 			public static final String OP_ERROR = "op_error";
 			public static final String OP_ERROR_DESCRIPTION = "op_error_description";
 			public static final String OP_ISSUER = "op_issuer";
+			public static final String OP_LOCALITY = "op_locality";
 			public static final String OP_DOCUMENT_TYPE = "op_document_type";
 			public static final String MICROSERVICE_NAME = "microservice_name";
 			public static final String OP_ROLE = "op_role";

@@ -26,8 +26,8 @@ public class IssuerDTO {
     @Field("asl")
     private String asl;
 
-    @Field("hospital")
-    private String hospital;
+    @Field("enterprise")
+    private String enterprise;
 
     @Field("fiscal_code")
     private String fiscalCode;
@@ -42,8 +42,8 @@ public class IssuerDTO {
      * 6) Certificato per MMG/PLS:AAA BBB CF = 22
      * 7) Certificato da Medico Privato:AAA CF = 19
      *
-     * @param issuer
-     * @return
+     * @param issuer The field to be decoded.
+     * @return A DTO containing issuer information.
      */
     public static IssuerDTO decodeIssuer(String issuer) {
         IssuerDTO out = new IssuerDTO();
@@ -66,10 +66,10 @@ public class IssuerDTO {
             return out;
         }  else if (Constants.App.Regex.Compiled.COMPILED_PRIVATE_SSN_HOSPITAL_REGEX.matcher(subIssuer).matches()) { // 4) Certificato struttura privata Accreditata : AAA BBB Ca = 12
             out.setAsl(subIssuer.substring(0, 3));
-            out.setHospital(subIssuer.substring(3));
+            out.setEnterprise(subIssuer.substring(3));
             return out;
         } else if (Constants.App.Regex.Compiled.COMPILED_PRIVATE_HOSPITAL_REGEX.matcher(subIssuer).matches()) { // 5) Certificato per struttura privata:AAA Cp = 9
-            out.setHospital(subIssuer);
+            out.setEnterprise(subIssuer);
             return out;
         } else if (Constants.App.Regex.Compiled.COMPILED_PRIVATE_DOCTOR_REGEX.matcher(subIssuer).matches()) { // 7) Certificato da Medico Privato:AAA CF = 19
             out.setFiscalCode(subIssuer);
@@ -81,7 +81,7 @@ public class IssuerDTO {
         }
         else if (Constants.App.Regex.Compiled.COMPILED_COMPLEX_STRUCTURE.matcher(subIssuer).matches()) { // 3) certificati per sistema aziendale: AAA BBB Cl = ?
             out.setAsl(subIssuer.substring(3, 6));
-            out.setHospital(subIssuer.substring(6));
+            out.setEnterprise(subIssuer.substring(6));
             return out;
         }
         return out;
