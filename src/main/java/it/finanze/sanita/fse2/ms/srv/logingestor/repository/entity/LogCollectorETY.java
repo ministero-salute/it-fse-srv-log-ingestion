@@ -6,6 +6,8 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -66,7 +68,7 @@ public class LogCollectorETY {
 
 	@Field(name = Constants.Mongo.Fields.OP_LOCALITY)
 	@JsonProperty(Constants.Mongo.Fields.OP_LOCALITY)
-	private String locality;
+	private LocalityDTO locality;
 
 	@Field(name = Constants.Mongo.Fields.OP_DOCUMENT_TYPE)
 	@JsonProperty(Constants.Mongo.Fields.OP_DOCUMENT_TYPE)
