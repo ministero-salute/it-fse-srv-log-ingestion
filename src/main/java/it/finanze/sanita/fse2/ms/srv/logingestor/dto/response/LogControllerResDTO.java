@@ -11,21 +11,16 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LogControllerResDTO extends ResponseDTO {
+public class LogControllerResDTO {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1630931782215900987L;
 
-	private transient List<LogCollectorETY> entity;
+	private List<LogCollectorETY> entity;
 	
 	public LogControllerResDTO() {
 		super();
 	}
 
 	public LogControllerResDTO(final LogTraceInfoDTO traceInfo, final List<LogCollectorETY> inEntity) {
-		super(traceInfo);
 		entity = inEntity;
 	}
 	

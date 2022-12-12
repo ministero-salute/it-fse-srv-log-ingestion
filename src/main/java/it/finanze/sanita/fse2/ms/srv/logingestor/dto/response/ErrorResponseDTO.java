@@ -24,12 +24,8 @@ import lombok.EqualsAndHashCode;
 @Builder
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper=false)
-public class ErrorResponseDTO extends AbstractDTO {
+public class ErrorResponseDTO {
 
-	/**
-	 * Serial version uid.
-	 */
-	private static final long serialVersionUID = 137633410161165390L;
 
 	/**
 	 * Trace id log.

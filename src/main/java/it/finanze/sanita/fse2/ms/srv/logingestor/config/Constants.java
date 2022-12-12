@@ -8,34 +8,6 @@ import java.util.regex.Pattern;
 
 public final class Constants {
 
-    /**
-	 *	Path scan.
-	 */
-	public static final class ComponentScan {
-
-		/**
-		 * Base path.
-		 */
-		public static final String BASE = "it.finanze.sanita.fse2.ms.srv.logingestor";
-
-
-		/**
-		 * Configuration mongo path.
-		 */
-		public static final String CONFIG_MONGO = "it.finanze.sanita.fse2.ms.srv.logingestor.config.mongo";
-
-		/**
-		 * Configuration mongo repository path.
-		 */
-		public static final String REPOSITORY_MONGO = "it.finanze.sanita.fse2.ms.srv.logingestor.repository";
-		
-
-		
-		private ComponentScan() {
-			//This method is intentionally left blank.
-		}
-
-	}
 	
 	public static final class Collections {
 

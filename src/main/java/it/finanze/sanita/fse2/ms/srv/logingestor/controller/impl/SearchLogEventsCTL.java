@@ -20,11 +20,6 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.utility.DateUtility;
 @RestController
 public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsCTL {
 
-	/**
-	 * Serial version uid.
-	 */
-	private static final long serialVersionUID = -293930001283648727L;
-
 	@Autowired
 	private transient ILogEventsSRV logEventsSrv;
 

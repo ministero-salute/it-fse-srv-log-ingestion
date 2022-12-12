@@ -3,22 +3,16 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.controller;
 
-import java.io.Serializable;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 import brave.Tracer;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogTraceInfoDTO;
 
-public abstract class AbstractCTL implements Serializable {
+public abstract class AbstractCTL {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 145052693293739719L;
 	
 	@Autowired
-	private transient Tracer tracer;
+	private Tracer tracer;
 
 	protected LogTraceInfoDTO getLogTraceInfo() {
 		LogTraceInfoDTO out = new LogTraceInfoDTO(null, null);

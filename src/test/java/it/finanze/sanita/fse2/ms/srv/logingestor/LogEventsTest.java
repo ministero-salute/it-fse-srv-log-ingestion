@@ -10,8 +10,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
-import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,18 +18,18 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.ActiveProfiles;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import lombok.extern.slf4j.Slf4j;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ComponentScan(basePackages = { Constants.ComponentScan.BASE })
 @ActiveProfiles(Constants.Profile.TEST)
 @Slf4j
 class LogEventsTest {

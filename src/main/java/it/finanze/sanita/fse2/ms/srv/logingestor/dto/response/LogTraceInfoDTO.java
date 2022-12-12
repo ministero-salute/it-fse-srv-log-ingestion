@@ -8,12 +8,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class LogTraceInfoDTO extends AbstractDTO {
-
-	/**
-	 * Serial version uid.
-	 */
-	private static final long serialVersionUID = -3293646580163030489L;
+public class LogTraceInfoDTO {
 
 	/**
 	 * Span.
