@@ -72,8 +72,10 @@ public class LogEventsRepo implements ILogEventsRepo {
 				doc.put(Constants.Mongo.Fields.OP_LOCALITY, Document.parse(JsonUtility.objectToJson(localityDTO)));
 			}
 
+			log.info("Inizio il clone");
 			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 			mongoTemplate.save(ety);
+			log.info("Salvataggio su mongo effettuato");
 		} catch(Exception ex){
 			log.error("Error while save event : " , ex);
 			throw new BusinessException("Error while save event : " , ex);
