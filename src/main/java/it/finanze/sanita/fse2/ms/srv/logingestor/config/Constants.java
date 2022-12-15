@@ -102,6 +102,11 @@ public final class Constants {
 			public static final String GATEWAY_NAME = "gateway_name";
 			public static final String OP_WARNING = "op_warning";
 			public static final String OP_WARNING_DESCRIPTION = "op_warning_description";
+			public static final String OP_SUBJ_APPLICATION = "op_subj_application";
+			public static final String OP_SUBJ_APPLICATION_ID = "op_application_id";
+			public static final String OP_SUBJ_APPLICATION_VENDOR = "op_application_vendor";
+			public static final String OP_SUBJ_APPLICATION_VERSION = "op_application_version";
+			
 		}
 	}
   

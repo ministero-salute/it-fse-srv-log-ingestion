@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.SubjApplicationDTO;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -97,4 +98,8 @@ public class LogCollectorETY {
 	@Field(name = Constants.Mongo.Fields.MICROSERVICE_NAME)
 	@JsonProperty(Constants.Mongo.Fields.MICROSERVICE_NAME)
 	private String microserviceName;
+	
+	@Field(name = Constants.Mongo.Fields.OP_SUBJ_APPLICATION)
+	@JsonProperty(Constants.Mongo.Fields.OP_SUBJ_APPLICATION)
+	private SubjApplicationDTO opSubjApplication;
 }

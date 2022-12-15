@@ -11,6 +11,7 @@ import java.util.TimeZone;
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.SubjApplicationDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
@@ -71,8 +72,20 @@ public class LogEventsRepo implements ILogEventsRepo {
 				LocalityDTO localityDTO = LocalityDTO.decodeLocality(locality);
 				doc.put(Constants.Mongo.Fields.OP_LOCALITY, Document.parse(JsonUtility.objectToJson(localityDTO)));
 			}
-
-			log.info("Inizio il clone");
+			
+			String subjApplicationId = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
+			String subjApplicationVendor = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
+			String subjApplicationVersion = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
+			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
+			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
+			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
+			
+			if(StringUtils.isNotEmpty(subjApplicationId) && StringUtils.isNotEmpty(subjApplicationVendor) && 
+					StringUtils.isNotEmpty(subjApplicationVersion)) {
+				SubjApplicationDTO subjDTO = new SubjApplicationDTO(subjApplicationId,subjApplicationVendor,subjApplicationVersion);
+				doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
+			}
+			
 			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 			mongoTemplate.save(ety);
 			log.info("Salvataggio su mongo effettuato");
