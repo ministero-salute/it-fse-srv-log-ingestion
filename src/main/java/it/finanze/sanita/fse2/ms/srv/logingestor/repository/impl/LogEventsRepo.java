@@ -81,18 +81,24 @@ public class LogEventsRepo implements ILogEventsRepo {
 			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
 			
 			SubjApplicationDTO subjDTO = new SubjApplicationDTO();
+			boolean saveField = false;
 			if(StringUtils.isNotEmpty(subjApplicationId)) {
 				subjDTO.setSubject_application_id(subjApplicationId);
+				saveField = true;
 			} 
 
 			if(StringUtils.isNotEmpty(subjApplicationVendor)) {
 				subjDTO.setSubject_application_vendor(subjApplicationVendor);
+				saveField = true;
 			} 
 			
 			if(StringUtils.isNotEmpty(subjApplicationVersion)) {
 				subjDTO.setSubject_application_version(subjApplicationVersion);
+				saveField = true;
 			}
-			doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
+			if(saveField) {
+				doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
+			}
 			
 			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 			mongoTemplate.save(ety);
