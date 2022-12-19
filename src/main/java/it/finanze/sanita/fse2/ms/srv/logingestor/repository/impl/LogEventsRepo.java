@@ -80,11 +80,19 @@ public class LogEventsRepo implements ILogEventsRepo {
 			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
 			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
 			
-			if(StringUtils.isNotEmpty(subjApplicationId) && StringUtils.isNotEmpty(subjApplicationVendor) && 
-					StringUtils.isNotEmpty(subjApplicationVersion)) {
-				SubjApplicationDTO subjDTO = new SubjApplicationDTO(subjApplicationId,subjApplicationVendor,subjApplicationVersion);
-				doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
+			SubjApplicationDTO subjDTO = new SubjApplicationDTO();
+			if(StringUtils.isNotEmpty(subjApplicationId)) {
+				subjDTO.setSubject_application_id(subjApplicationId);
+			} 
+
+			if(StringUtils.isNotEmpty(subjApplicationVendor)) {
+				subjDTO.setSubject_application_vendor(subjApplicationVendor);
+			} 
+			
+			if(StringUtils.isNotEmpty(subjApplicationVersion)) {
+				subjDTO.setSubject_application_version(subjApplicationVersion);
 			}
+			doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
 			
 			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
 			mongoTemplate.save(ety);
@@ -117,5 +125,6 @@ public class LogEventsRepo implements ILogEventsRepo {
 			throw new BusinessException("Error while getting records : " , e);
 		}		
 	}
+	 
 	
 }
