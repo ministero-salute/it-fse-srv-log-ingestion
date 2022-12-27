@@ -3,6 +3,7 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -24,84 +25,34 @@ import org.springframework.stereotype.Repository;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorBase;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorKpiETY;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Repository
 public class LogEventsRepo implements ILogEventsRepo {
 
-	/**
-	 * Serial version uid.
-	 */
-	private static final long serialVersionUID = -4017623557412046071L;
-
 	@Autowired
-	private transient MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 	
+	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);  
+
 	@Override
 	public void saveLogEvent(final String json) {
 		try {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);
 			simpleDateFormat.setTimeZone(TimeZone.getDefault());
+			Document doc = buildDocumentToSave(json);
 
-			Document doc = Document.parse(json);
-			String issuer = doc.getString(Constants.Mongo.Fields.OP_ISSUER);
-			String locality = doc.getString(Constants.Mongo.Fields.OP_LOCALITY);
-			doc.remove(Constants.Mongo.Fields.OP_ISSUER);
-			doc.remove(Constants.Mongo.Fields.OP_LOCALITY);
-			
-			Date startDate = null;
-			if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START) != null) {
-				startDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START));
+			LogCollectorBase b = null;
+			if(Constants.Mongo.Fields.LOG_TYPE_CONTROL.equals(doc.getString("log_type"))) {
+				b = JsonUtility.clone(doc, LogCollectorControlETY.class);
+			} else {
+				b = JsonUtility.clone(doc, LogCollectorKpiETY.class);
 			}
 			
-			Date endDate = null;
-			if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END) != null) {
-				endDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END));
-			}
-			doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_START, startDate);
-			doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_END, endDate);
-
-			if (StringUtils.isNotEmpty(issuer)) {
-				IssuerDTO issuerDTO = IssuerDTO.decodeIssuer(issuer);
-				doc.put(Constants.Mongo.Fields.OP_ISSUER, Document.parse(JsonUtility.objectToJson(issuerDTO)));
-			}
-
-			if (StringUtils.isNotEmpty(locality)) {
-				LocalityDTO localityDTO = LocalityDTO.decodeLocality(locality);
-				doc.put(Constants.Mongo.Fields.OP_LOCALITY, Document.parse(JsonUtility.objectToJson(localityDTO)));
-			}
-			
-			String subjApplicationId = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
-			String subjApplicationVendor = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
-			String subjApplicationVersion = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
-			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
-			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
-			doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
-			
-			SubjApplicationDTO subjDTO = new SubjApplicationDTO();
-			boolean saveField = false;
-			if(StringUtils.isNotEmpty(subjApplicationId)) {
-				subjDTO.setSubject_application_id(subjApplicationId);
-				saveField = true;
-			} 
-
-			if(StringUtils.isNotEmpty(subjApplicationVendor)) {
-				subjDTO.setSubject_application_vendor(subjApplicationVendor);
-				saveField = true;
-			} 
-			
-			if(StringUtils.isNotEmpty(subjApplicationVersion)) {
-				subjDTO.setSubject_application_version(subjApplicationVersion);
-				saveField = true;
-			}
-			if(saveField) {
-				doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
-			}
-			
-			LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
-			mongoTemplate.save(ety);
+			mongoTemplate.save(b);
 			log.info("Salvataggio su mongo effettuato");
 		} catch(Exception ex){
 			log.error("Error while save event : " , ex);
@@ -110,7 +61,7 @@ public class LogEventsRepo implements ILogEventsRepo {
 	}
 
 	@Override
-	public List<LogCollectorETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
+	public List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
 		try {
 			Query query = new Query();
 			Criteria cri = Criteria.where(Constants.Mongo.Fields.OP_TIMESTAMP_START).gte(startDate).and(Constants.Mongo.Fields.OP_TIMESTAMP_END).lte(endDate);
@@ -125,12 +76,71 @@ public class LogEventsRepo implements ILogEventsRepo {
 			query.fields().exclude(Constants.Mongo.Fields.ID);
 			query.addCriteria(cri);
 			query.limit(100).with(Sort.by(Constants.Mongo.Fields.OP_TIMESTAMP_START).descending());
-			return mongoTemplate.find(query, LogCollectorETY.class);
+			return mongoTemplate.find(query, LogCollectorControlETY.class);
 		} catch (Exception e) {
 			log.error("Error while getting records : " , e);
 			throw new BusinessException("Error while getting records : " , e);
 		}		
 	}
 	 
+	
+	private Document buildDocumentToSave(final String json) throws ParseException {
+		Document doc = Document.parse(json);
+		String issuer = doc.getString(Constants.Mongo.Fields.OP_ISSUER);
+		String locality = doc.getString(Constants.Mongo.Fields.OP_LOCALITY);
+		doc.remove(Constants.Mongo.Fields.OP_ISSUER);
+		doc.remove(Constants.Mongo.Fields.OP_LOCALITY);
+		
+		Date startDate = null;
+		if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START) != null) {
+			startDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START));
+		}
+		
+		Date endDate = null;
+		if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END) != null) {
+			endDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END));
+		}
+		doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_START, startDate);
+		doc.put(Constants.Mongo.Fields.OP_TIMESTAMP_END, endDate);
+
+		if (StringUtils.isNotEmpty(issuer)) {
+			IssuerDTO issuerDTO = IssuerDTO.decodeIssuer(issuer);
+			doc.put(Constants.Mongo.Fields.OP_ISSUER, Document.parse(JsonUtility.objectToJson(issuerDTO)));
+		}
+
+		if (StringUtils.isNotEmpty(locality)) {
+			LocalityDTO localityDTO = LocalityDTO.decodeLocality(locality);
+			doc.put(Constants.Mongo.Fields.OP_LOCALITY, Document.parse(JsonUtility.objectToJson(localityDTO)));
+		}
+		
+		String subjApplicationId = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
+		String subjApplicationVendor = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
+		String subjApplicationVersion = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
+		doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
+		doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
+		doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
+		
+		SubjApplicationDTO subjDTO = new SubjApplicationDTO();
+		boolean saveField = false;
+		if(StringUtils.isNotEmpty(subjApplicationId)) {
+			subjDTO.setSubject_application_id(subjApplicationId);
+			saveField = true;
+		} 
+
+		if(StringUtils.isNotEmpty(subjApplicationVendor)) {
+			subjDTO.setSubject_application_vendor(subjApplicationVendor);
+			saveField = true;
+		} 
+		
+		if(StringUtils.isNotEmpty(subjApplicationVersion)) {
+			subjDTO.setSubject_application_version(subjApplicationVersion);
+			saveField = true;
+		}
+		if(saveField) {
+			doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
+		}
+		
+		return doc;
+	}
 	
 }

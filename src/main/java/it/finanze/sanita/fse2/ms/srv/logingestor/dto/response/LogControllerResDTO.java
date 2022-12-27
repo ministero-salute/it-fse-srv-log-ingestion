@@ -5,7 +5,7 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.dto.response;
 
 import java.util.List;
 
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,13 +14,13 @@ import lombok.Setter;
 public class LogControllerResDTO {
 	
 
-	private List<LogCollectorETY> entity;
+	private List<LogCollectorControlETY> entity;
 	
 	public LogControllerResDTO() {
 		super();
 	}
 
-	public LogControllerResDTO(final LogTraceInfoDTO traceInfo, final List<LogCollectorETY> inEntity) {
+	public LogControllerResDTO(final LogTraceInfoDTO traceInfo, final List<LogCollectorControlETY> inEntity) {
 		entity = inEntity;
 	}
 	

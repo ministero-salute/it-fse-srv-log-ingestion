@@ -13,7 +13,7 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.controller.AbstractCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.controller.ISearchLogEventsCTL;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogControllerResDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.ValidationException;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.ILogEventsSRV;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.DateUtility;
 
@@ -36,7 +36,7 @@ public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsC
 		startDate = DateUtility.setHoursToDate(startDate, 0, 0, 0);
 		endDate = DateUtility.setHoursToDate(endDate, 23,59,59);
 
-		List<LogCollectorETY> res = logEventsSrv.getLogEvents(region, startDate, endDate, docType);
+		List<LogCollectorControlETY> res = logEventsSrv.getLogEvents(region, startDate, endDate, docType);
 
 		return new LogControllerResDTO(getLogTraceInfo(), res);
 	}

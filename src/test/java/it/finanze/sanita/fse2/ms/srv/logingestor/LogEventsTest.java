@@ -25,7 +25,7 @@ import org.springframework.test.context.ActiveProfiles;
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import lombok.extern.slf4j.Slf4j;
 
@@ -42,7 +42,7 @@ class LogEventsTest {
 
 	@BeforeEach
 	void setup() {
-		mongoTemplate.dropCollection(LogCollectorETY.class);
+		mongoTemplate.dropCollection(LogCollectorControlETY.class);
 	}
 
 	@ParameterizedTest
@@ -55,7 +55,7 @@ class LogEventsTest {
 			eventsRepo.saveLogEvent(json);
 		}
 
-		List<LogCollectorETY> persistedEntities = mongoTemplate.find(new Query(), LogCollectorETY.class);
+		List<LogCollectorControlETY> persistedEntities = mongoTemplate.find(new Query(), LogCollectorControlETY.class);
 
 		assertEquals(numEntities, persistedEntities.size());
 		persistedEntities.forEach(entity -> {
@@ -77,11 +77,11 @@ class LogEventsTest {
 		issuerDTO.setRegion(region);
 		doc.put("op_issuer", Document.parse(JsonUtility.objectToJson(issuerDTO)));
 
-		LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
+		LogCollectorControlETY ety = JsonUtility.clone(doc, LogCollectorControlETY.class);
 
 		mongoTemplate.insert(ety);
 
-		List<LogCollectorETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
+		List<LogCollectorControlETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
 
 		assertEquals(1, result.size());
 		assertEquals(ety.getDocumentType(),result.get(0).getDocumentType());
@@ -96,11 +96,11 @@ class LogEventsTest {
 	@DisplayName("Save log null and search another log by getLogEvents")
 	void getLogEventsWrong(String region, Date startDate, Date endDate, String docType) {
 
-		LogCollectorETY ety = new LogCollectorETY();
+		LogCollectorControlETY ety = new LogCollectorControlETY();
 
 		mongoTemplate.insert(ety);
 
-		List<LogCollectorETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
+		List<LogCollectorControlETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
 
 		assertEquals(0, result.size());
 	}
@@ -115,7 +115,7 @@ class LogEventsTest {
 		doc.put("op_timestamp_end", endDate);
 		doc.put("op_document_type", docType);
 
-		LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
+		LogCollectorControlETY ety = JsonUtility.clone(doc, LogCollectorControlETY.class);
 
 		mongoTemplate.insert(ety);
 		
@@ -124,7 +124,7 @@ class LogEventsTest {
 		c.add(Calendar.DATE, 365);
 		startDate = c.getTime();
 
-		List<LogCollectorETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
+		List<LogCollectorControlETY> result = eventsRepo.getLogEvents(region, startDate, endDate, docType);
 
 		assertEquals(0, result.size());
 	}
@@ -139,11 +139,11 @@ class LogEventsTest {
 		doc.put("op_timestamp_end", endDate);
 		doc.put("op_document_type", docType);
 
-		LogCollectorETY ety = JsonUtility.clone(doc, LogCollectorETY.class);
+		LogCollectorControlETY ety = JsonUtility.clone(doc, LogCollectorControlETY.class);
 
 		mongoTemplate.insert(ety);
 
-		List<LogCollectorETY> result = eventsRepo.getLogEvents(region, null, null, docType);
+		List<LogCollectorControlETY> result = eventsRepo.getLogEvents(region, null, null, docType);
 
 		assertEquals(0, result.size());
 	}

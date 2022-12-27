@@ -1,30 +1,25 @@
-/*
- * SPDX-License-Identifier: AGPL-3.0-or-later
- */
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity;
 
+import java.util.Date;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.SubjApplicationDTO;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import java.util.Date;
-
-@Document(collection = "#{@logCollectorBean}")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class LogCollectorETY {
+public class LogCollectorBase {
 
 	@Id
 	private String id;

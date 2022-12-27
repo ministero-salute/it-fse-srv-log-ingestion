@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl.LogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.ILogEventsSRV;
 import lombok.extern.slf4j.Slf4j;
@@ -24,8 +24,8 @@ public class LogEventsSRV implements ILogEventsSRV {
 	private LogEventsRepo eventsRepo;
 	
 	@Override
-	public List<LogCollectorETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
-		List<LogCollectorETY> out = new ArrayList<>();
+	public List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
+		List<LogCollectorControlETY> out = new ArrayList<>();
 		
 		try {
 			out = eventsRepo.getLogEvents(region, startDate, endDate, docType);

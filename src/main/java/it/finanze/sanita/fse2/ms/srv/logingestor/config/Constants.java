@@ -11,7 +11,9 @@ public final class Constants {
 	
 	public static final class Collections {
 
-		public static final String LOG_COLLECTION_NAME = "log_collector";
+		public static final String LOG_CONTROL_COLLECTION_NAME = "log_collector";
+		
+		public static final String LOG_KPI_COLLECTION_NAME = "log_collector_kpi";
 
 		private Collections() {
 
@@ -21,6 +23,7 @@ public final class Constants {
 	
 	public static final class Profile {
 		public static final String TEST = "test";
+		
 		public static final String TEST_PREFIX = "test_";
 
 		/**
@@ -106,6 +109,11 @@ public final class Constants {
 			public static final String OP_SUBJ_APPLICATION_ID = "op_application_id";
 			public static final String OP_SUBJ_APPLICATION_VENDOR = "op_application_vendor";
 			public static final String OP_SUBJ_APPLICATION_VERSION = "op_application_version";
+			
+			
+			public static final String LOG_TYPE_KPI = "gateway-structured-log";
+			
+			public static final String LOG_TYPE_CONTROL = "gateway-control-structured-log";
 			
 		}
 	}
