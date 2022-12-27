@@ -97,4 +97,5 @@ public class LogCollectorBase {
 	@Field(name = Constants.Mongo.Fields.OP_SUBJ_APPLICATION)
 	@JsonProperty(Constants.Mongo.Fields.OP_SUBJ_APPLICATION)
 	private SubjApplicationDTO opSubjApplication;
+	
 }
