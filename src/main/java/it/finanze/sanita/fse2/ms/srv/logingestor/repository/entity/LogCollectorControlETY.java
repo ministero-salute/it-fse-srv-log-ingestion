@@ -3,6 +3,7 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity;
 
+import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 
 @Document(collection = "#{@logCollectorControlBean}")
+@EqualsAndHashCode(callSuper = false)
 public class LogCollectorControlETY extends LogCollectorBase {
 	
 	@Field(name = Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID)

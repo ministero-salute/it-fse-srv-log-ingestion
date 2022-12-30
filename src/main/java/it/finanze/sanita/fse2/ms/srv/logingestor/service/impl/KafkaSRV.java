@@ -12,13 +12,12 @@ import org.springframework.stereotype.Service;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.IKafkaSRV;
-import it.finanze.sanita.fse2.ms.srv.logingestor.service.KafkaAbstractSRV;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Service
 @Slf4j
-public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
+public class KafkaSRV implements IKafkaSRV {
 
 	/**
 	 * Serial version uid.
@@ -26,7 +25,7 @@ public class KafkaSRV extends KafkaAbstractSRV implements IKafkaSRV {
 	private static final long serialVersionUID = 987723954716001270L;
 	
 	@Autowired
-	private ILogEventsRepo eventsRepo;
+	private transient ILogEventsRepo eventsRepo;
 
 	@Override
 	@KafkaListener(topics = "#{'${kafka.log.base-topic}'}", clientIdPrefix = "#{'${kafka.consumer.client-id}'}", containerFactory = "kafkaListenerIngestorContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")

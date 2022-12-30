@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorKpiETY;
 import org.bson.Document;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(Constants.Profile.TEST)
 @Slf4j
-class LogEventsTest {
+class LogEventsTest extends AbstractTest {
 
 	@Autowired
 	ILogEventsRepo eventsRepo;
@@ -40,22 +41,35 @@ class LogEventsTest {
 	@Autowired
 	MongoTemplate mongoTemplate;
 
-	@BeforeEach
-	void setup() {
-		mongoTemplate.dropCollection(LogCollectorControlETY.class);
+	@ParameterizedTest
+	@ValueSource(ints = { 10, 100, 1000 })
+	@DisplayName("Save json log control and search it in collection")
+	void saveLogControl(final int numEntities) {
+
+		final String json = "{\"op_document_type\":\"value\", \"log_type\": \"control-structured-log\"}";
+		for (int i = 0; i < numEntities; i++) {
+			eventsRepo.saveLogEvent(json);
+		}
+
+		List<LogCollectorControlETY> persistedEntities = mongoTemplate.find(new Query(), LogCollectorControlETY.class);
+
+		assertEquals(numEntities, persistedEntities.size());
+		persistedEntities.forEach(entity -> {
+			assertNotNull(entity.getId());
+		});
 	}
 
 	@ParameterizedTest
 	@ValueSource(ints = { 10, 100, 1000 })
-	@DisplayName("Save json and search it in collection")
-	void save(final int numEntities) {
+	@DisplayName("Save json kpi log and search it in collection")
+	void saveKpiLog(final int numEntities) {
 
 		final String json = "{\"op_document_type\":\"value\"}";
 		for (int i = 0; i < numEntities; i++) {
 			eventsRepo.saveLogEvent(json);
 		}
 
-		List<LogCollectorControlETY> persistedEntities = mongoTemplate.find(new Query(), LogCollectorControlETY.class);
+		List<LogCollectorKpiETY> persistedEntities = mongoTemplate.find(new Query(), LogCollectorKpiETY.class);
 
 		assertEquals(numEntities, persistedEntities.size());
 		persistedEntities.forEach(entity -> {

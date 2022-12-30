@@ -21,7 +21,7 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.utility.DateUtility;
 public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsCTL {
 
 	@Autowired
-	private transient ILogEventsSRV logEventsSrv;
+	private ILogEventsSRV logEventsSrv;
 
 	@Override
 	public LogControllerResDTO getLogEvents(String region, Date startDate, Date endDate, String docType) {

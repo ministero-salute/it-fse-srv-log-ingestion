@@ -19,7 +19,7 @@ public class ValidationException extends RuntimeException {
 	private static final long serialVersionUID = 4554229308888951202L;
 	
 	@Getter
-	private ErrorResponseDTO error;
+	private transient ErrorResponseDTO error;
 	/**
 	 * Message constructor.
 	 * 
