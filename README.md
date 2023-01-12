@@ -1,15 +1,16 @@
 # Fascicolo Sanitario 2.0
-[![N|Solid](https://www.sogei.it/content/dam/sogei/loghi/Sogei_logo_304.svg)](https://www.sogei.it/it/sogei-homepage.html)
 
 # _it-fse-srv-log-ingestion_
 
-
----
-
 Il microservizio in oggetto ha la responsabilità di accogliere i log strutturati provenienti dal Gateway.
 
+<br/>
+
 ## Repos
-- [ministero-salute-git-repo-url] - Repos Git Ministero della Salute
+- [*it-fse-support*](https://github.com/ministero-salute/it-fse-support) - Pagina di supporto FSE 2.0
+- [*it-fse-landing*](https://github.com/ministero-salute/it-fse-landing) - Landing page dei repository FSE 2.0
+
+<br/>
 
 ## License
 
