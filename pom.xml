@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>it.finanze.sanita.fse2</groupId>
 	<artifactId>srv-log-ingestion-ms</artifactId>
-	<version>0.2.0-RELEASE</version>
+	<version>0.3.0-RELEASE</version>
 	<name>srv-log-ingestion-ms</name>
 	<description>EDS Log ingestion</description>
 
