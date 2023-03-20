@@ -18,6 +18,7 @@ import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.utility.StringUtility;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -55,11 +56,23 @@ public class KafkaProducerCFG {
 		props.put(ProducerConfig.ACKS_CONFIG,kafkaProducerPropCFG.getAck());
 		props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,kafkaProducerPropCFG.getIdempotence());
 		//SSL
-		if(kafkaPropCFG.isEnableSSL()) {
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getProtocol())) {
 			props.put("security.protocol", kafkaPropCFG.getProtocol());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getMechanism())) {
 			props.put("sasl.mechanism", kafkaPropCFG.getMechanism());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getConfigJaas())) {
 			props.put("sasl.jaas.config", kafkaPropCFG.getConfigJaas());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getTrustoreLocation())) {
 			props.put("ssl.truststore.location", kafkaPropCFG.getTrustoreLocation());  
+		}
+		
+		if(!StringUtility.isNullOrEmpty(String.valueOf(kafkaPropCFG.getTrustorePassword()))) {
 			props.put("ssl.truststore.password", String.valueOf(kafkaPropCFG.getTrustorePassword())); 
 		}
 		return props;
@@ -110,11 +123,25 @@ public class KafkaProducerCFG {
 		props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, kafkaProducerPropCFG.getKeySerializer());
 		props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, kafkaProducerPropCFG.getValueSerializer());
 		//SSL
-		if(kafkaPropCFG.isEnableSSL()) {
+		
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getProtocol())) {
 			props.put("security.protocol", kafkaPropCFG.getProtocol());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getMechanism())) {
 			props.put("sasl.mechanism", kafkaPropCFG.getMechanism());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getConfigJaas())) {
 			props.put("sasl.jaas.config", kafkaPropCFG.getConfigJaas());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(kafkaPropCFG.getTrustoreLocation())) {
 			props.put("ssl.truststore.location", kafkaPropCFG.getTrustoreLocation());
+		}
+		
+		if(!StringUtility.isNullOrEmpty(String.valueOf(kafkaPropCFG.getTrustorePassword()))) {
 			props.put("ssl.truststore.password", String.valueOf(kafkaPropCFG.getTrustorePassword())); 
 		}
 
