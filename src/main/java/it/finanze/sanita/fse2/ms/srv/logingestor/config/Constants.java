@@ -110,6 +110,7 @@ public final class Constants {
 			public static final String OP_SUBJ_APPLICATION_VENDOR = "op_application_vendor";
 			public static final String OP_SUBJ_APPLICATION_VERSION = "op_application_version";
 			public static final String WORKFLOW_INSTANCE_ID = "workflow_instance_id";
+			public static final String TYPE_ID_EXTENSION = "typeIdExtension";
 			
 			
 			public static final String LOG_TYPE_KPI = "kpi-structured-log";

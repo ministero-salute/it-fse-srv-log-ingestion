@@ -19,4 +19,8 @@ public class LogCollectorControlETY extends LogCollectorBase {
 	@JsonProperty(Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID)
 	private String workflowInstanceId;
 	
+	@Field(name = Constants.Mongo.Fields.TYPE_ID_EXTENSION)
+	@JsonProperty(Constants.Mongo.Fields.TYPE_ID_EXTENSION)
+	private String typeIdExtension;
+	
 }
