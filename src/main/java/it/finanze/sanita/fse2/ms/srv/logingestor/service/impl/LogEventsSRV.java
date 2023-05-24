@@ -19,14 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class LogEventsSRV implements ILogEventsSRV {
-	
+
 	@Autowired
 	private LogEventsRepo eventsRepo;
-	
+
 	@Override
 	public List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
 		List<LogCollectorControlETY> out = new ArrayList<>();
-		
+
 		try {
 			out = eventsRepo.getLogEvents(region, startDate, endDate, docType);
 		} catch (Exception e) {
@@ -35,5 +35,10 @@ public class LogEventsSRV implements ILogEventsSRV {
 		}
 		return out;
 	}
-	
+
+	@Override
+	public void srvListener(final String value) {
+		eventsRepo.saveLogEvent(value);
+	}
+
 }

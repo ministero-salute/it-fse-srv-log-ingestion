@@ -4,7 +4,10 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.utility;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -37,7 +40,6 @@ public class JsonUtility {
         String jsonString = "";
 
         try {
-
             jsonString = mapper.writeValueAsString(obj);
         } catch (Exception e) {
             log.error("Errore durante la conversione da oggetto {} a string json: {}", obj.getClass(), e);
@@ -60,5 +62,17 @@ public class JsonUtility {
 
     public static <T> T clone (Object object, Class<T> outputClass) {
         return JsonUtility.jsonToObject(JsonUtility.objectToJson(object), outputClass);
+    }
+    
+    public static <T> T validateJson(String jsonString, Class<T> clazz) {
+        T obj = null;
+        try {
+            obj = mapper.readValue(jsonString, clazz);
+        } catch (JsonProcessingException e) {
+            log.error("Errore durante la conversione da stringa json a oggetto: " + e);
+            throw new ValidationException("Fornire un json corretto");
+        }
+
+        return obj;
     }
 }
