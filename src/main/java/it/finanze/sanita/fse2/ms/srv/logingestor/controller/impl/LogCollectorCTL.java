@@ -22,4 +22,11 @@ public class LogCollectorCTL extends AbstractCTL implements ILogCollectorCTL {
 		return new ResponseDTO(getLogTraceInfo());
 	}
 
+	@Override
+	public ResponseDTO createLogEventsDataPrep(Integer numDocumenti, Integer numThread, String logJson) {
+		JsonUtility.validateJson(logJson, Object.class);
+		logEventSRV.srvListenerTest(logJson,numDocumenti, numThread);
+		return new ResponseDTO(getLogTraceInfo());
+	}
+
 }
