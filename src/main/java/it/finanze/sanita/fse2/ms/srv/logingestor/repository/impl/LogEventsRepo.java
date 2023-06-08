@@ -37,11 +37,11 @@ public class LogEventsRepo implements ILogEventsRepo {
 	@Autowired
 	private MongoTemplate mongoTemplate;
 	
-	private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);  
 
 	@Override
 	public void saveLogEvent(final String json) {
 		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);
 			simpleDateFormat.setTimeZone(TimeZone.getDefault());
 			Document doc = buildDocumentToSave(json);
 
@@ -85,6 +85,7 @@ public class LogEventsRepo implements ILogEventsRepo {
 	 
 	
 	private Document buildDocumentToSave(final String json) throws ParseException {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);
 		Document doc = Document.parse(json);
 		String issuer = doc.getString(Constants.Mongo.Fields.OP_ISSUER);
 		String locality = doc.getString(Constants.Mongo.Fields.OP_LOCALITY);
