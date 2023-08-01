@@ -52,6 +52,18 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(out, headers, status);
 	}
 
+	@ExceptionHandler(value = {Exception.class})
+	protected ResponseEntity<ErrorResponseDTO> handleGenericValidationException(final Exception ex, final WebRequest request) {
+		log.error("" , ex);  
+		Integer status = 500;
+		 
+		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_PROBLEM_JSON);
+
+		ErrorResponseDTO out = new ErrorResponseDTO(getLogTraceInfo(), "/msg/validation", "Validation error", ex.getMessage(), status, "/msg/validation");
+		return new ResponseEntity<>(out, headers, status);
+	}
+
 
 
 	private LogTraceInfoDTO getLogTraceInfo() {

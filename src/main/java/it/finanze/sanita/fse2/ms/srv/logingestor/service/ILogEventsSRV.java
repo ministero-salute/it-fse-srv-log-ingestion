@@ -19,4 +19,8 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorC
 public interface ILogEventsSRV {
 
 	List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType);
+	
+	void srvListener(String value);
+	
+	void srvListenerTest(String value,int totalDocuments,int numThread);
 }
