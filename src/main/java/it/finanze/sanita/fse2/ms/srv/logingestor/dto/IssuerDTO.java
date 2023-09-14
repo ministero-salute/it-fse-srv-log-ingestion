@@ -87,11 +87,11 @@ public class IssuerDTO {
             out.setFiscalCode(subIssuer.substring(3));
             return out;
         }
-        else if (Constants.App.Regex.Compiled.COMPILED_COMPLEX_STRUCTURE.matcher(subIssuer).matches()) { // 3) certificati per sistema aziendale: AAA BBB Cl = ?
-            out.setAsl(subIssuer.substring(3, 6));
-            out.setEnterprise(subIssuer.substring(6));
-            return out;
-        }
+        // else if (Constants.App.Regex.Compiled.COMPILED_COMPLEX_STRUCTURE.matcher(subIssuer).matches()) { // 3) certificati per sistema aziendale: AAA BBB Cl = ?
+        //    out.setAsl(subIssuer.substring(3, 6));
+        //    out.setEnterprise(subIssuer.substring(6));
+        //    return out;
+        // }
         return out;
     }
 }
