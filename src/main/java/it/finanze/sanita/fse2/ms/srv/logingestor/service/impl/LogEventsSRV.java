@@ -57,43 +57,52 @@ public class LogEventsSRV implements ILogEventsSRV {
 		eventsRepo.saveLogEvent(value);
 	} 
 
+//	@Override
+//	public void srvListenerTest(final String value,int totalDocuments,int numThread) {
+//	    int batchSize = 1000; // Dimensione del batch
+//
+//	    ExecutorService executor = Executors.newFixedThreadPool(numThread);
+//	    List<CompletableFuture<Void>> futures = new ArrayList<>();
+//
+//	    int batchCount = totalDocuments / batchSize;
+//	    int remainingDocuments = totalDocuments % batchSize;
+//
+//	    for (int i = 0; i < batchCount; i++) {
+//	        int startIndex = i * batchSize;
+//	        int endIndex = startIndex + batchSize;
+//	        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+//	            createLogBatch(value, startIndex, endIndex);
+//	        }, executor);
+//	        futures.add(future);
+//	    }
+//
+//	    if (remainingDocuments > 0) {
+//	        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+//	            int startIndex = batchCount * batchSize;
+//	            int endIndex = startIndex + remainingDocuments;
+//	            createLogBatch(value, startIndex, endIndex);
+//	        }, executor);
+//	        futures.add(future);
+//	    }
+//
+////	    CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
+//
+////	    try {
+////	        allFutures.get(10, TimeUnit.MINUTES); // Attendi il completamento di tutte le operazioni entro 10 minuti
+////	    } catch (Exception e) {
+////	        // Gestisci eventuali eccezioni
+////	    }
+//
+//	    executor.shutdown();
+//
+//	}
+	
 	@Override
 	public void srvListenerTest(final String value,int totalDocuments,int numThread) {
-	    int batchSize = 1000; // Dimensione del batch
 
-	    ExecutorService executor = Executors.newFixedThreadPool(numThread);
-	    List<CompletableFuture<Void>> futures = new ArrayList<>();
-
-	    int batchCount = totalDocuments / batchSize;
-	    int remainingDocuments = totalDocuments % batchSize;
-
-	    for (int i = 0; i < batchCount; i++) {
-	        int startIndex = i * batchSize;
-	        int endIndex = startIndex + batchSize;
-	        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-	            createLogBatch(value, startIndex, endIndex);
-	        }, executor);
-	        futures.add(future);
-	    }
-
-	    if (remainingDocuments > 0) {
-	        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
-	            int startIndex = batchCount * batchSize;
-	            int endIndex = startIndex + remainingDocuments;
-	            createLogBatch(value, startIndex, endIndex);
-	        }, executor);
-	        futures.add(future);
-	    }
-
-//	    CompletableFuture<Void> allFutures = CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]));
-
-//	    try {
-//	        allFutures.get(10, TimeUnit.MINUTES); // Attendi il completamento di tutte le operazioni entro 10 minuti
-//	    } catch (Exception e) {
-//	        // Gestisci eventuali eccezioni
-//	    }
-
-	    executor.shutdown();
+		for(int i=0; i<totalDocuments; i++) {
+			eventsRepo.saveLogEvent(value);
+		}
 
 	}
 
