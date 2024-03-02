@@ -11,7 +11,6 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.config.kafka;
 
-import java.io.Serializable;
 import java.util.Properties;
 
 import org.apache.kafka.clients.admin.AdminClient;
@@ -27,13 +26,8 @@ import lombok.Data;
 
 @Data
 @Component
-public class KafkaPropertiesCFG implements Serializable {
-  
-	/**
-	 *  Serial version uid
-	 */
-	private static final long serialVersionUID = -7936473659737067416L;
-
+public class KafkaPropertiesCFG {
+   
 	/**
 	 *  Boostrap server.
 	 */
@@ -70,11 +64,6 @@ public class KafkaPropertiesCFG implements Serializable {
 	@Value("${kafka.properties.ssl.truststore.password}")
 	private transient char[] trustorePassword;
 	 
-	/**
-	 * Enable Ssl flag.
-	 */
-	@Value("${kafka.enablessl}")
-	private boolean enableSSL;
 	
 	@Autowired
 	private ProfileUtility profileUtility;

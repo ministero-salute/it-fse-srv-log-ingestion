@@ -11,13 +11,11 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.service;
 
-import java.io.Serializable;
-
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.messaging.MessageHeaders;
  
 
-public interface IKafkaSRV extends Serializable {
+public interface IKafkaSRV {
 
 	void listenerGtwTopic(ConsumerRecord<String, String> cr, MessageHeaders messageHeaders);
 	

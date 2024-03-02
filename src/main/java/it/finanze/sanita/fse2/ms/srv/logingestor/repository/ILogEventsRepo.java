@@ -14,6 +14,7 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.repository;
 import java.util.Date;
 import java.util.List;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorBase;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 
 public interface ILogEventsRepo {
@@ -21,5 +22,6 @@ public interface ILogEventsRepo {
 	void saveLogEvent(String json);
 	
 	List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType);
-	
+
+	Integer saveLog(List<? extends LogCollectorBase> logs);
 }

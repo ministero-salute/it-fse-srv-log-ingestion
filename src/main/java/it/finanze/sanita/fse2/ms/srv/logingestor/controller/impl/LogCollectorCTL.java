@@ -1,5 +1,8 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.controller.impl;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.ChunkDto;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.EsitoDTO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,4 +32,8 @@ public class LogCollectorCTL extends AbstractCTL implements ILogCollectorCTL {
 		return new ResponseDTO(getLogTraceInfo());
 	}
 
+	@Override
+	public EsitoDTO createLogsFromChunk(ChunkDto chunk) {
+		return logEventSRV.processChunk(chunk);
+	}
 }

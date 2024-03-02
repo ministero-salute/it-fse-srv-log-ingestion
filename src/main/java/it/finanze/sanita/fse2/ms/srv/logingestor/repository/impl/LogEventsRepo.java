@@ -151,5 +151,20 @@ public class LogEventsRepo implements ILogEventsRepo {
 		
 		return doc;
 	}
-	
+
+	@Override
+	public Integer saveLog(List<? extends LogCollectorBase> logs) {
+		Integer numInsert = 0;
+		try {
+			mongoTemplate.insertAll(logs);
+			numInsert = logs.size();
+			log.info("Salvataggio su mongo effettuato");
+		} catch (Exception ex) {
+			log.error("Error while save logs : ", ex);
+			throw new BusinessException("Error while save logs : ", ex);
+		}
+
+		return numInsert;
+	}
+ 
 }
