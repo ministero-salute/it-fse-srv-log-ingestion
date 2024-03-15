@@ -119,6 +119,8 @@ public final class Constants {
 			public static final String OP_SUBJ_APPLICATION_VERSION = "op_application_version";
 			public static final String WORKFLOW_INSTANCE_ID = "workflow_instance_id";
 			public static final String TYPE_ID_EXTENSION = "typeIdExtension";
+			public static final String ADMINISTRATIVE_REQUEST = "administrative_request";
+			public static final String AUTHOR_INSTITUTION = "author_institution"; 
 			public static final String LOG_TYPE_KPI = "kpi-structured-log";
 			public static final String LOG_TYPE_CONTROL = "control-structured-log";
 			
