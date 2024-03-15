@@ -11,10 +11,24 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 
 @Document(collection = "#{@logCollectorKpiBean}")
 public class LogCollectorKpiETY extends LogCollectorBase {
 
+	@Field(name = Constants.Mongo.Fields.ADMINISTRATIVE_REQUEST)
+	@JsonProperty(Constants.Mongo.Fields.ADMINISTRATIVE_REQUEST)
+	private List<String> administrative_request;
+	
+	@Field(name = Constants.Mongo.Fields.AUTHOR_INSTITUTION)
+	@JsonProperty(Constants.Mongo.Fields.AUTHOR_INSTITUTION)
+	private String author_institution;
 	
 }
