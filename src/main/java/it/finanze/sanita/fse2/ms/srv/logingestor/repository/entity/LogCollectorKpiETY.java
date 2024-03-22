@@ -11,8 +11,6 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity;
 
-import java.util.List;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -23,12 +21,24 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
 @Document(collection = "#{@logCollectorKpiBean}")
 public class LogCollectorKpiETY extends LogCollectorBase {
 
-	@Field(name = Constants.Mongo.Fields.ADMINISTRATIVE_REQUEST)
-	@JsonProperty(Constants.Mongo.Fields.ADMINISTRATIVE_REQUEST)
-	private List<String> administrative_request;
-	
-	@Field(name = Constants.Mongo.Fields.AUTHOR_INSTITUTION)
-	@JsonProperty(Constants.Mongo.Fields.AUTHOR_INSTITUTION)
-	private String author_institution;
+	@Field(name = Constants.Mongo.Fields.IS_SSN)
+    @JsonProperty(Constants.Mongo.Fields.IS_SSN)
+    private boolean isSsn;
+
+    @Field(name = Constants.Mongo.Fields.REGISTRY)
+    @JsonProperty(Constants.Mongo.Fields.REGISTRY)
+    private String registry;
+
+    @Field(name = Constants.Mongo.Fields.REGION)
+    @JsonProperty(Constants.Mongo.Fields.REGION)
+    private String region;
+
+    @Field(name = Constants.Mongo.Fields.COMPANY)
+    @JsonProperty(Constants.Mongo.Fields.COMPANY)
+    private String company;
+
+    @Field(name = Constants.Mongo.Fields.STRUCTURE)
+    @JsonProperty(Constants.Mongo.Fields.STRUCTURE)
+    private String structure;
 	
 }

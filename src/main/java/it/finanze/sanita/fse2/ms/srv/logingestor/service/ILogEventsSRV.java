@@ -14,8 +14,8 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.service;
 import java.util.Date;
 import java.util.List;
 
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.ChunkDto;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.EsitoDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorBase;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 
 public interface ILogEventsSRV {
@@ -26,6 +26,6 @@ public interface ILogEventsSRV {
 	
 	void srvListenerTest(String value,int totalDocuments,int numThread);
 
-	EsitoDTO processChunk(ChunkDto chunkDto);
+	<T extends LogCollectorBase> EsitoDTO processChunk(List<T> logList);
 
 }

@@ -13,15 +13,15 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
-import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.SubjApplicationDTO;
-import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +31,16 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.LocalityDTO;
+import it.finanze.sanita.fse2.ms.srv.logingestor.dto.SubjApplicationDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.ILogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorBase;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorKpiETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.utility.JsonUtility;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -44,7 +49,32 @@ public class LogEventsRepo implements ILogEventsRepo {
 
 	@Autowired
 	private MongoTemplate mongoTemplate;
-	
+
+	@Override
+	public void saveLogsEvent(String json, int totalDocuments) {
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);
+			simpleDateFormat.setTimeZone(TimeZone.getDefault());
+
+			List<LogCollectorBase> b = new ArrayList<>();
+
+			for (int i = 0; i < totalDocuments; i++) {
+				Document doc = buildDocumentToSave(json);
+
+				if(Constants.Mongo.Fields.LOG_TYPE_CONTROL.equals(doc.getString("log_type"))) {
+					b.add(JsonUtility.clone(doc, LogCollectorControlETY.class));
+				} else {
+					b.add(JsonUtility.clone(doc, LogCollectorKpiETY.class));
+				}
+			}
+			log.info("Creata lista da inserire su Mongo");
+			mongoTemplate.insertAll(b);
+			log.info("Salvataggio su mongo effettuato");
+		} catch(Exception ex){
+			log.error("Error while save event : " , ex);
+			throw new BusinessException("Error while save event : " , ex);
+		}
+	}
 
 	@Override
 	public void saveLogEvent(final String json) {
@@ -153,17 +183,55 @@ public class LogEventsRepo implements ILogEventsRepo {
 	}
 
 	@Override
-	public Integer saveLog(List<? extends LogCollectorBase> logs) {
+	public <T extends LogCollectorBase> Integer saveLog(List<T> logs) {
 		Integer numInsert = 0;
 		try {
-			mongoTemplate.insertAll(logs);
+			// Raccoglie i wii dalla lista
+			List<String> wiis = logs.stream()
+									.map(log -> log.getWorkflowInstanceId())
+									.collect(Collectors.toList());
+
+			// Cerco sul DB i log gi├á salvati
+			Query query = new Query(Criteria.where(Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID).in(wiis));
+			List<? extends LogCollectorBase> resultList = mongoTemplate.find(query, logs.get(0).getClass());
+
+			// Se non ci sono log salvati sul DB
+			if (resultList.isEmpty()) {
+				// inserisco tutti
+				mongoTemplate.insertAll(logs);
+			}else{
+				List<T> logsToInsert = new ArrayList<>();
+				// Creo il dizionario per la ricerca
+				Map<String, List<String>> dict = new HashMap<>();
+				for (int i = 0; i < resultList.size(); i++) {
+					String wii = resultList.get(i).getWorkflowInstanceId();
+					String operation = resultList.get(i).getOperation();
+					if (dict.containsKey(wii)) {
+						List<String> ops = dict.get(wii);
+						ops.add(operation);
+						dict.put(wii, ops);
+					}else{
+						List<String> temp = Arrays.asList(operation);
+						dict.put(wii, temp);
+					}
+				}
+				// Per ogni log
+				for(int i = 0; i<logs.size(); i++){
+					// Cerco se esiste nei log gi├á presenti
+					String wii = logs.get(i).getWorkflowInstanceId();
+					String operation = logs.get(i).getOperation();
+					if (dict.get(wii) == null || !dict.get(wii).contains(operation)) {
+						logsToInsert.add(logs.get(i));
+					}
+				}
+				mongoTemplate.insertAll(logsToInsert);
+			}
 			numInsert = logs.size();
 			log.info("Salvataggio su mongo effettuato");
 		} catch (Exception ex) {
 			log.error("Error while save logs : ", ex);
 			throw new BusinessException("Error while save logs : ", ex);
 		}
-
 		return numInsert;
 	}
  

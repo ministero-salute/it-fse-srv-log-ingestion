@@ -18,14 +18,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.ChunkDto;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.EsitoDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorBase;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorKpiETY;
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl.LogEventsRepo;
 import it.finanze.sanita.fse2.ms.srv.logingestor.service.ILogEventsSRV;
+import it.finanze.sanita.fse2.ms.srv.logingestor.threads.LogThread;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -54,25 +53,35 @@ public class LogEventsSRV implements ILogEventsSRV {
 	} 
  
 	@Override
-	public void srvListenerTest(final String value,int totalDocuments,int numThread) {
-		for(int i=0; i<totalDocuments; i++) {
-			eventsRepo.saveLogEvent(value);
+	public void srvListenerTest(final String value, int totalDocuments, int numThread) {
+
+		List<LogThread> threads = new ArrayList<>();
+
+
+		for (int i = 0; i < numThread; i++) {
+			LogThread thread = new LogThread(eventsRepo, totalDocuments/numThread, value);
+			thread.start();
+			log.info("STARTING NEW THREAD");
+			threads.add(thread);
+		}
+
+		for (LogThread thread : threads) {
+			try {
+				thread.join();
+				log.info("JOINED WITH THREAD " + thread.getName());
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				e.printStackTrace();
+			}
 		}
 	}
 
 	@Override
-	public EsitoDTO processChunk(ChunkDto chunkDto) {
+	public <T extends LogCollectorBase> EsitoDTO processChunk(List<T> logList) {
 		EsitoDTO esito = new EsitoDTO();
 
-		if (chunkDto.getLogType().equals(Constants.Mongo.Fields.LOG_TYPE_CONTROL)) {
-			List<LogCollectorControlETY> controllList = chunkDto.getControllRecord();
-			Integer numInsert = eventsRepo.saveLog(controllList);
-			esito.setNumInsert(numInsert);
-		} else if (chunkDto.getLogType().equals(Constants.Mongo.Fields.LOG_TYPE_KPI)) {
-			List<LogCollectorKpiETY> kpiList = chunkDto.getKpiRecord();
-			Integer numInsert = eventsRepo.saveLog(kpiList);
-			esito.setNumInsert(numInsert);
-		}
+		Integer numInsert = eventsRepo.saveLog(logList);
+		esito.setNumInsert(numInsert);
 
 		return esito;
 
