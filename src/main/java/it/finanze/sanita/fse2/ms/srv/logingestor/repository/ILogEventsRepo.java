@@ -18,12 +18,14 @@ import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorB
 import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
 
 public interface ILogEventsRepo {
-  
+
 	void saveLogEvent(String json);
 
 	void saveLogsEvent(String json, int totalDocuments);
-	
+
 	List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType);
 
-	<T extends LogCollectorBase> Integer saveLog(List<T> logs);
+	<T extends LogCollectorBase> List<T> findLogsIn(List<String> wiis, Class<T> clazz);
+
+	<T> void insertAll(List<T> logs);
 }

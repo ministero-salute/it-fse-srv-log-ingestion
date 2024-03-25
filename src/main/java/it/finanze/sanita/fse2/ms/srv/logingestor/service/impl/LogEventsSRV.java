@@ -12,8 +12,12 @@
 package it.finanze.sanita.fse2.ms.srv.logingestor.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,16 +54,15 @@ public class LogEventsSRV implements ILogEventsSRV {
 	@Override
 	public void srvListener(final String value) {
 		eventsRepo.saveLogEvent(value);
-	} 
- 
+	}
+
 	@Override
 	public void srvListenerTest(final String value, int totalDocuments, int numThread) {
 
 		List<LogThread> threads = new ArrayList<>();
 
-
 		for (int i = 0; i < numThread; i++) {
-			LogThread thread = new LogThread(eventsRepo, totalDocuments/numThread, value);
+			LogThread thread = new LogThread(eventsRepo, totalDocuments / numThread, value);
 			thread.start();
 			log.info("STARTING NEW THREAD");
 			threads.add(thread);
@@ -77,12 +80,54 @@ public class LogEventsSRV implements ILogEventsSRV {
 	}
 
 	@Override
-	public <T extends LogCollectorBase> EsitoDTO processChunk(List<T> logList) {
+	public <T extends LogCollectorBase> EsitoDTO processChunk(List<T> logs) {
 		EsitoDTO esito = new EsitoDTO();
 
-		Integer numInsert = eventsRepo.saveLog(logList);
-		esito.setNumInsert(numInsert);
+		Integer numInsert = 0;
 
+		// Raccoglie i wii dalla lista
+		List<String> wiis = logs.stream()
+				.map(log -> log.getWorkflowInstanceId())
+				.collect(Collectors.toList());
+
+		// Cerco sul DB i log giá salvati
+		List<? extends LogCollectorBase> resultList = eventsRepo.findLogsIn(wiis, logs.get(0).getClass());
+
+		// Se non ci sono log salvati sul DB
+		if (resultList.isEmpty()) {
+			// inserisco tutti
+			eventsRepo.insertAll(logs);
+		} else {
+			List<T> logsToInsert = new ArrayList<>();
+			// Creo il dizionario per la ricerca
+			Map<String, List<String>> dict = new HashMap<>();
+			for (int i = 0; i < resultList.size(); i++) {
+				String wii = resultList.get(i).getWorkflowInstanceId();
+				String operation = resultList.get(i).getOperation();
+				if (dict.containsKey(wii)) {
+					List<String> ops = dict.get(wii);
+					ops.add(operation);
+					dict.put(wii, ops);
+				} else {
+					List<String> temp = Arrays.asList(operation);
+					dict.put(wii, temp);
+				}
+			}
+			// Per ogni log
+			for (int i = 0; i < logs.size(); i++) {
+				// Cerco se esiste nei log giá presenti
+				String wii = logs.get(i).getWorkflowInstanceId();
+				String operation = logs.get(i).getOperation();
+				if (dict.get(wii) == null || !dict.get(wii).contains(operation)) {
+					logsToInsert.add(logs.get(i));
+				}
+			}
+			eventsRepo.insertAll(logsToInsert);
+		}
+
+		numInsert = logs.size();
+		log.info("Salvataggio su mongo effettuato");
+		esito.setNumInsert(numInsert);
 		return esito;
 
 	}

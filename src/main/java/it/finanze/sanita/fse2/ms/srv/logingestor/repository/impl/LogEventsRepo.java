@@ -14,13 +14,9 @@ package it.finanze.sanita.fse2.ms.srv.logingestor.repository.impl;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TimeZone;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
@@ -61,7 +57,7 @@ public class LogEventsRepo implements ILogEventsRepo {
 			for (int i = 0; i < totalDocuments; i++) {
 				Document doc = buildDocumentToSave(json);
 
-				if(Constants.Mongo.Fields.LOG_TYPE_CONTROL.equals(doc.getString("log_type"))) {
+				if (Constants.Mongo.Fields.LOG_TYPE_CONTROL.equals(doc.getString("log_type"))) {
 					b.add(JsonUtility.clone(doc, LogCollectorControlETY.class));
 				} else {
 					b.add(JsonUtility.clone(doc, LogCollectorKpiETY.class));
@@ -70,9 +66,9 @@ public class LogEventsRepo implements ILogEventsRepo {
 			log.info("Creata lista da inserire su Mongo");
 			mongoTemplate.insertAll(b);
 			log.info("Salvataggio su mongo effettuato");
-		} catch(Exception ex){
-			log.error("Error while save event : " , ex);
-			throw new BusinessException("Error while save event : " , ex);
+		} catch (Exception ex) {
+			log.error("Error while save event : ", ex);
+			throw new BusinessException("Error while save event : ", ex);
 		}
 	}
 
@@ -84,17 +80,17 @@ public class LogEventsRepo implements ILogEventsRepo {
 			Document doc = buildDocumentToSave(json);
 
 			LogCollectorBase b = null;
-			if(Constants.Mongo.Fields.LOG_TYPE_CONTROL.equals(doc.getString("log_type"))) {
+			if (Constants.Mongo.Fields.LOG_TYPE_CONTROL.equals(doc.getString("log_type"))) {
 				b = JsonUtility.clone(doc, LogCollectorControlETY.class);
 			} else {
 				b = JsonUtility.clone(doc, LogCollectorKpiETY.class);
 			}
-			
+
 			mongoTemplate.save(b);
 			log.info("Salvataggio su mongo effettuato");
-		} catch(Exception ex){
-			log.error("Error while save event : " , ex);
-			throw new BusinessException("Error while save event : " , ex);
+		} catch (Exception ex) {
+			log.error("Error while save event : ", ex);
+			throw new BusinessException("Error while save event : ", ex);
 		}
 	}
 
@@ -102,26 +98,26 @@ public class LogEventsRepo implements ILogEventsRepo {
 	public List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType) {
 		try {
 			Query query = new Query();
-			Criteria cri = Criteria.where(Constants.Mongo.Fields.OP_TIMESTAMP_START).gte(startDate).and(Constants.Mongo.Fields.OP_TIMESTAMP_END).lte(endDate);
+			Criteria cri = Criteria.where(Constants.Mongo.Fields.OP_TIMESTAMP_START).gte(startDate)
+					.and(Constants.Mongo.Fields.OP_TIMESTAMP_END).lte(endDate);
 
-			if(!StringUtils.isEmpty(region)) {
+			if (!StringUtils.isEmpty(region)) {
 				cri.and(Constants.Mongo.Query.REGION).is(region);
-			} 
-			
-			if(!StringUtils.isEmpty(docType)){
+			}
+
+			if (!StringUtils.isEmpty(docType)) {
 				cri.and(Constants.Mongo.Fields.OP_DOCUMENT_TYPE).is(docType);
-			} 
+			}
 			query.fields().exclude(Constants.Mongo.Fields.ID);
 			query.addCriteria(cri);
 			query.limit(100).with(Sort.by(Constants.Mongo.Fields.OP_TIMESTAMP_START).descending());
 			return mongoTemplate.find(query, LogCollectorControlETY.class);
 		} catch (Exception e) {
-			log.error("Error while getting records : " , e);
-			throw new BusinessException("Error while getting records : " , e);
-		}		
+			log.error("Error while getting records : ", e);
+			throw new BusinessException("Error while getting records : ", e);
+		}
 	}
-	 
-	
+
 	private Document buildDocumentToSave(final String json) throws ParseException {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(Constants.App.Custom.DATE_PATTERN);
 		Document doc = Document.parse(json);
@@ -129,12 +125,12 @@ public class LogEventsRepo implements ILogEventsRepo {
 		String locality = doc.getString(Constants.Mongo.Fields.OP_LOCALITY);
 		doc.remove(Constants.Mongo.Fields.OP_ISSUER);
 		doc.remove(Constants.Mongo.Fields.OP_LOCALITY);
-		
+
 		Date startDate = null;
 		if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START) != null) {
 			startDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_START));
 		}
-		
+
 		Date endDate = null;
 		if (doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END) != null) {
 			endDate = simpleDateFormat.parse(doc.getString(Constants.Mongo.Fields.OP_TIMESTAMP_END));
@@ -151,88 +147,46 @@ public class LogEventsRepo implements ILogEventsRepo {
 			LocalityDTO localityDTO = LocalityDTO.decodeLocality(locality);
 			doc.put(Constants.Mongo.Fields.OP_LOCALITY, Document.parse(JsonUtility.objectToJson(localityDTO)));
 		}
-		
+
 		String subjApplicationId = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
 		String subjApplicationVendor = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
 		String subjApplicationVersion = doc.getString(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
 		doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_ID);
 		doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VENDOR);
 		doc.remove(Constants.Mongo.Fields.OP_SUBJ_APPLICATION_VERSION);
-		
+
 		SubjApplicationDTO subjDTO = new SubjApplicationDTO();
 		boolean saveField = false;
-		if(StringUtils.isNotEmpty(subjApplicationId)) {
+		if (StringUtils.isNotEmpty(subjApplicationId)) {
 			subjDTO.setSubject_application_id(subjApplicationId);
 			saveField = true;
-		} 
+		}
 
-		if(StringUtils.isNotEmpty(subjApplicationVendor)) {
+		if (StringUtils.isNotEmpty(subjApplicationVendor)) {
 			subjDTO.setSubject_application_vendor(subjApplicationVendor);
 			saveField = true;
-		} 
-		
-		if(StringUtils.isNotEmpty(subjApplicationVersion)) {
+		}
+
+		if (StringUtils.isNotEmpty(subjApplicationVersion)) {
 			subjDTO.setSubject_application_version(subjApplicationVersion);
 			saveField = true;
 		}
-		if(saveField) {
+		if (saveField) {
 			doc.put(Constants.Mongo.Fields.OP_SUBJ_APPLICATION, Document.parse(JsonUtility.objectToJson(subjDTO)));
 		}
-		
+
 		return doc;
 	}
 
 	@Override
-	public <T extends LogCollectorBase> Integer saveLog(List<T> logs) {
-		Integer numInsert = 0;
-		try {
-			// Raccoglie i wii dalla lista
-			List<String> wiis = logs.stream()
-									.map(log -> log.getWorkflowInstanceId())
-									.collect(Collectors.toList());
-
-			// Cerco sul DB i log gi├á salvati
-			Query query = new Query(Criteria.where(Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID).in(wiis));
-			List<? extends LogCollectorBase> resultList = mongoTemplate.find(query, logs.get(0).getClass());
-
-			// Se non ci sono log salvati sul DB
-			if (resultList.isEmpty()) {
-				// inserisco tutti
-				mongoTemplate.insertAll(logs);
-			}else{
-				List<T> logsToInsert = new ArrayList<>();
-				// Creo il dizionario per la ricerca
-				Map<String, List<String>> dict = new HashMap<>();
-				for (int i = 0; i < resultList.size(); i++) {
-					String wii = resultList.get(i).getWorkflowInstanceId();
-					String operation = resultList.get(i).getOperation();
-					if (dict.containsKey(wii)) {
-						List<String> ops = dict.get(wii);
-						ops.add(operation);
-						dict.put(wii, ops);
-					}else{
-						List<String> temp = Arrays.asList(operation);
-						dict.put(wii, temp);
-					}
-				}
-				// Per ogni log
-				for(int i = 0; i<logs.size(); i++){
-					// Cerco se esiste nei log gi├á presenti
-					String wii = logs.get(i).getWorkflowInstanceId();
-					String operation = logs.get(i).getOperation();
-					if (dict.get(wii) == null || !dict.get(wii).contains(operation)) {
-						logsToInsert.add(logs.get(i));
-					}
-				}
-				mongoTemplate.insertAll(logsToInsert);
-			}
-			numInsert = logs.size();
-			log.info("Salvataggio su mongo effettuato");
-		} catch (Exception ex) {
-			log.error("Error while save logs : ", ex);
-			throw new BusinessException("Error while save logs : ", ex);
-		}
-		return numInsert;
+	public <T extends LogCollectorBase> List<T> findLogsIn(List<String> wiis, Class<T> clazz) {
+		Query query = new Query(Criteria.where(Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID).in(wiis));
+		List<T> resultList = mongoTemplate.find(query, clazz);
+		return resultList;
 	}
- 
+
+	@Override
+	public <T> void insertAll(List<T> logs) {
+		mongoTemplate.insertAll(logs);
+	}
 }
