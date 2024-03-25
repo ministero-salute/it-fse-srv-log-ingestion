@@ -11,21 +11,23 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor;
 
-import com.google.gson.Gson;
-import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
-import it.finanze.sanita.fse2.ms.srv.logingestor.config.kafka.KafkaTopicCFG;
-import it.finanze.sanita.fse2.ms.srv.logingestor.dto.IssuerDTO;
-import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
-import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorKpiETY;
-import it.finanze.sanita.fse2.ms.srv.logingestor.service.IKafkaSRV;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.bson.Document;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -33,23 +35,20 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.time.Duration;
-import java.util.*;
+import com.google.gson.Gson;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doReturn;
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.kafka.KafkaTopicCFG;
+import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.BusinessException;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorControlETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity.LogCollectorKpiETY;
+import it.finanze.sanita.fse2.ms.srv.logingestor.service.IKafkaSRV;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles(Constants.Profile.TEST)
