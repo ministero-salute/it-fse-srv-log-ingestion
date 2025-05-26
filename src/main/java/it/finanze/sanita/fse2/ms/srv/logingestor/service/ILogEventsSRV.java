@@ -20,6 +20,8 @@ public interface ILogEventsSRV {
 
 	List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType);
 	
+	List<LogCollectorControlETY> getLogEventsByWorkflowId(String workflowInstanceIdString);
+
 	void srvListener(String value);
 	
 	void srvListenerTest(String value,int totalDocuments,int numThread);

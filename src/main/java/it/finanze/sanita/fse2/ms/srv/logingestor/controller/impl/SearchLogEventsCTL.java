@@ -49,5 +49,14 @@ public class SearchLogEventsCTL extends AbstractCTL implements ISearchLogEventsC
 		return new LogControllerResDTO(getLogTraceInfo(), res);
 	}
 
+	@Override
+	public LogControllerResDTO getLogEventsByWorkflowId(String workflowInstanceIdString) {
+
+		List<LogCollectorControlETY> res =
+				logEventsSrv.getLogEventsByWorkflowId(workflowInstanceIdString);
+
+		return new LogControllerResDTO(getLogTraceInfo(), res);
+	}
+
 
 }

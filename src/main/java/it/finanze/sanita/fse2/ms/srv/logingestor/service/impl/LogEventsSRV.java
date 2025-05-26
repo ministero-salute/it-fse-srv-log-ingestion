@@ -57,6 +57,22 @@ public class LogEventsSRV implements ILogEventsSRV {
 		eventsRepo.saveLogEvent(value);
 	} 
 
+
+	@Override
+	public List<LogCollectorControlETY> getLogEventsByWorkflowId(String workflowInstanceIdString) {
+		List<LogCollectorControlETY> out = new ArrayList<>();
+
+		try {
+			out = eventsRepo.findByWorkflowInstanceIdCustom(workflowInstanceIdString);
+		} catch (Exception e) {
+			log.error("Error while getting log events by workflow ID: ", e);
+			throw new BusinessException("Error while getting log events by workflow ID: ", e);
+		}
+		return out;
+	}
+
+
+
 //	@Override
 //	public void srvListenerTest(final String value,int totalDocuments,int numThread) {
 //	    int batchSize = 1000; // Dimensione del batch

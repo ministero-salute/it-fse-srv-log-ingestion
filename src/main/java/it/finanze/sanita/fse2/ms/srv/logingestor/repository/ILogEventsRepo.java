@@ -21,5 +21,7 @@ public interface ILogEventsRepo {
 	void saveLogEvent(String json);
 	
 	List<LogCollectorControlETY> getLogEvents(String region, Date startDate, Date endDate, String docType);
-	
+
+	List<LogCollectorControlETY> findByWorkflowInstanceIdCustom(String workflowInstanceId);
+
 }

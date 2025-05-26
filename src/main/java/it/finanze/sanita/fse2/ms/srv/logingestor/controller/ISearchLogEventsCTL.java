@@ -16,6 +16,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -40,5 +41,26 @@ public interface ISearchLogEventsCTL {
 			@ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDTO.class))),
 			@ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ErrorResponseDTO.class)))})
 	LogControllerResDTO getLogEvents(@RequestParam(value="region", required = false) String region, @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, 
-			 @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate, @RequestParam(value="docType", required = false) String docType);
+			@DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate,
+			@RequestParam(value = "docType", required = false) String docType);
+
+	@GetMapping(value = "/log-events/{workflowInstanceId}")
+	@ApiResponse(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+			schema = @Schema(implementation = LogControllerResDTO.class)))
+	@Operation(summary = "Ricerca log",
+			description = "Ricerca dei record delle loggate in base a data, regione e tipo documento")
+	@ApiResponses(value = {
+			@ApiResponse(responseCode = "201", description = "Ricerca eseguita correttamente",
+					content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+							schema = @Schema(implementation = LogControllerResDTO.class))),
+			@ApiResponse(responseCode = "400", description = "Bad Request",
+					content = @Content(mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+							schema = @Schema(implementation = ErrorResponseDTO.class))),
+			@ApiResponse(responseCode = "500", description = "Internal Server Error",
+					content = @Content(mediaType = MediaType.APPLICATION_PROBLEM_JSON_VALUE,
+							schema = @Schema(implementation = ErrorResponseDTO.class)))})
+	LogControllerResDTO getLogEventsByWorkflowId(
+			@PathVariable(required = true, name = "workflowInstanceId") @Schema(
+					description = "Identificativo del workflow") String workflowInstanceId);
+
 }

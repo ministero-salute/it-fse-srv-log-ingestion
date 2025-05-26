@@ -151,5 +151,13 @@ public class LogEventsRepo implements ILogEventsRepo {
 		
 		return doc;
 	}
-	
+
+	@Override
+	public List<LogCollectorControlETY> findByWorkflowInstanceIdCustom(String workflowInstanceId) {
+		Query q = new Query();
+		q.addCriteria(
+				Criteria.where(Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID).is(workflowInstanceId));
+		return mongoTemplate.find(q, LogCollectorControlETY.class);
+	}
+
 }
