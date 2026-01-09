@@ -45,18 +45,25 @@ public class LocalityDTO {
         LocalityDTO out = new LocalityDTO();
         out.setRawValue(locality);
 
-        if (StringUtils.isNotEmpty(locality)) {
-            if (locality.length() >= 3) {
-                String aslCode = locality.substring(0, 3);
-                out.setAslCode(aslCode);
-            }
-    
-            if (locality.length() > 3) {
-                String subLocality = locality.substring(3);
-                out.setStructure(subLocality);
-            }
+        if (StringUtils.isEmpty(locality)) {
+            return out;
+        }
+
+        int lastCaretIndex = locality.lastIndexOf("^^^^");
+        if (lastCaretIndex == -1) {
+            return out;
+        }
+
+        String lastToken = locality.substring(lastCaretIndex + 4);
+
+        if (lastToken.length() == 12) {
+            out.setAslCode(lastToken.substring(3, 6));       
+            out.setStructure(lastToken.substring(6, 12));    
+        } else if (lastToken.length() == 6) {
+            out.setAslCode(lastToken.substring(3, 6));       
         }
 
         return out;
     }
+
 }
