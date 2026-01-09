@@ -24,6 +24,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class LocalityDTO {
+	
+	private static final String STS_OID = "2.16.840.1.113883.2.9.4.1.3";
     
     @Field("raw_value")
     private String rawValue;
@@ -39,7 +41,7 @@ public class LocalityDTO {
      * 
      * @param locality The field to be decoded.
      * @return A DTO containing locality information.
-     */
+     */ 
     public static LocalityDTO decodeLocality(String locality) {
 
         LocalityDTO out = new LocalityDTO();
@@ -47,6 +49,17 @@ public class LocalityDTO {
 
         if (StringUtils.isEmpty(locality)) {
             return out;
+        }
+
+        String[] parts = locality.split("&");
+
+        if (parts.length < 2) {
+            return out; // non c'è seconda parte
+        }
+
+        String secondPart = parts[1];
+        if (!STS_OID.equals(secondPart)) {
+            return out;  
         }
 
         int lastCaretIndex = locality.lastIndexOf("^^^^");
@@ -57,10 +70,10 @@ public class LocalityDTO {
         String lastToken = locality.substring(lastCaretIndex + 4);
 
         if (lastToken.length() == 12) {
-            out.setAslCode(lastToken.substring(3, 6));       
-            out.setStructure(lastToken.substring(6, 12));    
+            out.setAslCode(lastToken.substring(3, 6));
+            out.setStructure(lastToken.substring(6, 12));
         } else if (lastToken.length() == 6) {
-            out.setAslCode(lastToken.substring(3, 6));       
+            out.setAslCode(lastToken.substring(3, 6));
         }
 
         return out;
