@@ -26,11 +26,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 @Slf4j
 public class KafkaSRV implements IKafkaSRV {
-
-	/**
-	 * Serial version uid.
-	 */
-	private static final long serialVersionUID = 987723954716001270L;
 	
 	@Autowired
 	private transient ILogEventsRepo eventsRepo;
@@ -39,7 +34,6 @@ public class KafkaSRV implements IKafkaSRV {
 	@KafkaListener(topics = "#{'${kafka.log.base-topic}'}", clientIdPrefix = "#{'${kafka.consumer.client-id}'}", containerFactory = "kafkaListenerIngestorContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
 	public void listenerGtwTopic(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders) {
 		try {
-			log.info("Sono il consumer del base-topic e consumo il msg: "+ cr.value());
 			log.debug("Consuming Transaction Event - Message received with value {}", cr.value());
 			srvListener(cr.value());
 		} catch (Exception e) {
@@ -52,7 +46,6 @@ public class KafkaSRV implements IKafkaSRV {
 	@KafkaListener(topics = "#{'${kafka.log.base-eds-topic}'}", clientIdPrefix = "#{'${kafka.consumer-eds.client-id}'}", containerFactory = "kafkaListenerIngestorEdsContainerFactory", autoStartup = "${event.topic.auto.start}", groupId = "#{'${kafka.consumer.group-id}'}")
 	public void listenerEdsTopic(final ConsumerRecord<String, String> cr, final MessageHeaders messageHeaders) {
 		try {
-			log.info("Sono il consumer del base-eds-topic e consumo il msg: "+ cr.value());
 			log.debug("Consuming Transaction Event - Message received with value {}", cr.value());
 			srvListener(cr.value());
 		} catch (Exception e) {

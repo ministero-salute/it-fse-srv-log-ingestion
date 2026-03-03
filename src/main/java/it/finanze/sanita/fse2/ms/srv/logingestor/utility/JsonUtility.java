@@ -69,7 +69,7 @@ public class JsonUtility {
 
 
     public static <T> T clone (Object object, Class<T> outputClass) {
-        return JsonUtility.jsonToObject(JsonUtility.objectToJson(object), outputClass);
+        return jsonToObject(JsonUtility.objectToJson(object), outputClass);
     }
     
     public static <T> T validateJson(String jsonString, Class<T> clazz) {

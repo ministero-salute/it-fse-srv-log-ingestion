@@ -11,16 +11,18 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.repository.entity;
 
-import lombok.EqualsAndHashCode;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
+import lombok.EqualsAndHashCode;
 
 @Document(collection = "#{@logCollectorControlBean}")
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LogCollectorControlETY extends LogCollectorBase {
 	
 	@Field(name = Constants.Mongo.Fields.WORKFLOW_INSTANCE_ID)
@@ -30,5 +32,9 @@ public class LogCollectorControlETY extends LogCollectorBase {
 	@Field(name = Constants.Mongo.Fields.TYPE_ID_EXTENSION)
 	@JsonProperty(Constants.Mongo.Fields.TYPE_ID_EXTENSION)
 	private String typeIdExtension;
+	
+	@Field(name = Constants.Mongo.Fields.ID_DOCUMENTO)
+	@JsonProperty("idDocumento")
+	private String idDocumento;
 	
 }

@@ -121,7 +121,7 @@ public final class Constants {
 			public static final String TYPE_ID_EXTENSION = "typeIdExtension";
 			public static final String ADMINISTRATIVE_REQUEST = "administrative_request";
 			public static final String AUTHOR_INSTITUTION = "author_institution";
-			
+			public static final String ID_DOCUMENTO = "id_documento";
 			
 			public static final String LOG_TYPE_KPI = "kpi-structured-log";
 			public static final String LOG_TYPE_CONTROL = "control-structured-log";
