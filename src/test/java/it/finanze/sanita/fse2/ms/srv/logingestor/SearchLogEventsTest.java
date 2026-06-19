@@ -11,9 +11,12 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor;
 
-import brave.Tracer;
-import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
-import it.finanze.sanita.fse2.ms.srv.logingestor.controller.ISearchLogEventsCTL;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -21,7 +24,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,9 +32,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants;
+import it.finanze.sanita.fse2.ms.srv.logingestor.controller.ISearchLogEventsCTL;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -46,9 +47,6 @@ class SearchLogEventsTest extends AbstractTest {
 
 	@Autowired
 	MockMvc mvc; 
-
-	@Autowired
-	private ISearchLogEventsCTL searchLogEventsCTL;
 
     @Test
 	void livenessCheckCtlTest() throws Exception {

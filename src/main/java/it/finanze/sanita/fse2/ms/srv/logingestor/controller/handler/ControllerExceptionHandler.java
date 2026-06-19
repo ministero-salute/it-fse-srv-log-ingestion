@@ -11,6 +11,8 @@
  */
 package it.finanze.sanita.fse2.ms.srv.logingestor.controller.handler;
 
+import static it.finanze.sanita.fse2.ms.srv.logingestor.config.Constants.Properties.MS_NAME;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,7 +22,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import brave.Tracer;
+import io.opentelemetry.api.trace.SpanBuilder;
+import io.opentelemetry.api.trace.Tracer;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.ErrorResponseDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.dto.response.LogTraceInfoDTO;
 import it.finanze.sanita.fse2.ms.srv.logingestor.exceptions.ValidationException;
@@ -65,11 +68,16 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 	}
 
 
-
-	private LogTraceInfoDTO getLogTraceInfo() {
-		return new LogTraceInfoDTO(
-				tracer.currentSpan().context().spanIdString(), 
-				tracer.currentSpan().context().traceIdString());
+	protected LogTraceInfoDTO getLogTraceInfo() {
+		LogTraceInfoDTO out = new LogTraceInfoDTO(null, null);
+		SpanBuilder spanbuilder = tracer.spanBuilder(MS_NAME);
+		
+		if (spanbuilder != null) {
+			out = new LogTraceInfoDTO(
+					spanbuilder.startSpan().getSpanContext().getSpanId(), 
+					spanbuilder.startSpan().getSpanContext().getTraceId());
+		}
+		return out;
 	}
 
 }
